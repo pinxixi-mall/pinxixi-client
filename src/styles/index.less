@@ -1,0 +1,15 @@
+@primary: #f2270c;
+
+.fixed-to-top {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+.price {
+  &::before {
+    content: '￥';
+    font-size: 14px;
+  }
+}

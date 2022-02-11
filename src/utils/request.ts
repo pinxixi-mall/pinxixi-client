@@ -92,7 +92,7 @@ class httpRequest {
         let { data } = res
         if (data && data.code !== 200) {
           if (data.code === NOT_LOGIN) {
-            setToken(null)
+            setToken('')
             Dialog.alert({
               title: '提示',
               message: '请登录后再进行操作'
@@ -100,7 +100,7 @@ class httpRequest {
               router.push('/login')
             })            
           } else if (data.code === TOKEN_EXPIRED) {
-            setToken(null)
+            setToken('')
             Dialog.alert({
               title: '提示',
               message: '登录状态已失效，请重新登录'

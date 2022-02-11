@@ -25,12 +25,12 @@ export default defineConfig({
   base: './', // 打包路径
   server: {
     host: 'localhost',
-    port: 9090,
+    port: 8080,
     open: false,
     cors: true, // 允许跨域
     proxy: {
       '/api': {
-        target: 'http://localhost:3001/',
+        target: 'http://localhost:9090/',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace('/api', '')

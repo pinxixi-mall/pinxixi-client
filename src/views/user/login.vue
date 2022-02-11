@@ -3,20 +3,31 @@
     <van-image round class="logo" :src="logo" />
     <van-form @submit="onSubmit" class="login-form" ref="formRef">
       <van-field
-        v-model="state.username"
+        v-model="username"
         name="username"
         label="用户名"
         placeholder="请填写用户名"
         :rules="[{ required: true, message: '请填写用户名' }]"
       />
       <van-field
-        v-model="state.password"
+        v-model="password"
         type="password"
         name="password"
         label="密码"
         placeholder="请填写密码"
         :rules="[{ required: true, message: '请填写密码' }]"
       />
+      <van-field
+        v-model="verifyCode"
+        center
+        clearable
+        label="验证码"
+        placeholder="请输入验证码"
+      >
+        <template #button>
+          <VerifyCode />
+        </template>
+      </van-field>
       <div class="submit-btn">
         <van-button round block type="primary" native-type="submit"> 登录 </van-button>
         <van-button round block type="primary" plain class="register-btn" @click="onRegister">
@@ -28,20 +39,25 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, onMounted, DefineComponent } from 'vue'
+import { ref, reactive, onMounted, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '@/api/index'
 import { setToken } from '@/utils/utils'
 import logo from '@/assets/icons/logo.png'
+import VerifyCode from '@/components/VerifyCode/index.vue'
 
 const Login = {
+  components: {
+    VerifyCode
+  },
   setup() {
     const router = useRouter()
     const formRef = ref(null)
     const state = reactive({
-      username: '',
-      password: '',
-      avater: ''
+      username: null,
+      password: null,
+      avater: null,
+      verifyCode: null
     })
 
     onMounted(() => {
@@ -67,7 +83,7 @@ const Login = {
 
     return {
       logo,
-      state,
+      ...toRefs(state),
       onSubmit,
       formRef,
       onRegister

@@ -1,31 +1,33 @@
 <template>
   <div class="page">
-    <van-image round class="logo" :src="logo" />
+    <!-- <van-image round class="logo" :src="logo" /> -->
     <van-form @submit="onSubmit" class="login-form" ref="formRef">
       <van-field
         v-model="username"
         name="username"
         label="用户名"
-        placeholder="请填写用户名"
-        :rules="[{ required: true, message: '请填写用户名' }]"
+        placeholder="请输入"
+        :rules="[{ required: true, message: '请输入用户名' }]"
       />
       <van-field
         v-model="password"
         type="password"
         name="password"
         label="密码"
-        placeholder="请填写密码"
-        :rules="[{ required: true, message: '请填写密码' }]"
+        placeholder="请输入"
+        :rules="[{ required: true, message: '请输入密码' }]"
       />
       <van-field
         v-model="verifyCode"
         center
         clearable
         label="验证码"
-        placeholder="请输入验证码"
+        placeholder="请输入"
+        :rules="[{ required: true, message: '请输入验证码' }, 
+        { validator: checkVerifyCode, message: '验证码不正确'}]"
       >
         <template #button>
-          <VerifyCode />
+          <VerifyCode v-model="codeImgText" />
         </template>
       </van-field>
       <div class="submit-btn">
@@ -53,6 +55,7 @@ const Login = {
   setup() {
     const router = useRouter()
     const formRef = ref(null)
+    const codeImgText = ref(null)
     const state = reactive({
       username: null,
       password: null,
@@ -81,12 +84,17 @@ const Login = {
       router.push('register')
     }
 
+    // 验证码校验
+    const checkVerifyCode = (val) => val.toLowerCase() === codeImgText.value.toLowerCase()
+
     return {
       logo,
       ...toRefs(state),
       onSubmit,
       formRef,
-      onRegister
+      onRegister,
+      codeImgText,
+      checkVerifyCode
     }
   }
 }

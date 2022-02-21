@@ -102,7 +102,7 @@ const Login = {
 export default Login
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .page {
   width: 375px;
   height: 100vh;

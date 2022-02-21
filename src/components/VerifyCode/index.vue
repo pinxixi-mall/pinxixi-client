@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, defineProps, defineEmit } from 'vue'
+import { onMounted, ref, defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
   modelValue: null,
@@ -14,7 +14,7 @@ const props = defineProps({
   codeLength: Number
 })
 
-const emit = defineEmit(["update:modelValue"])
+const emit = defineEmits(["update:modelValue"])
 
 const { width = 110, height = 40, codeLength = 4 } = props
 

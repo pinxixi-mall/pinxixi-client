@@ -59,7 +59,7 @@ const Login = {
     const state = reactive({
       username: null,
       password: null,
-      avater: null,
+      avatar: null,
       verifyCode: null
     })
 
@@ -74,7 +74,7 @@ const Login = {
         password: state.password
       }
       const { data: { userInfo, token } } = await login(params)
-      state.avater = userInfo.avater
+      state.avatar = userInfo.avatar
       setToken(token)
       router.push('home')
     }
@@ -115,7 +115,7 @@ export default Login
     margin: 80px auto 50px;
     background: #eee;
   }
-  .avater {
+  .avatar {
     font-size: 90px;
     color: #f35517;
   }

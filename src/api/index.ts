@@ -11,8 +11,8 @@ export const login = (data: any) => {
 }
 
 // 首页轮播
-export const getHomeBanner = (data?: any) => {
-  return http.get('/client/getHomeBanner', data)
+export const getHomeCarousel = (data?: any) => {
+  return http.get('/client/getHomeCarousel', data)
 }
 
 // 首页推荐

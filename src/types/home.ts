@@ -6,13 +6,13 @@ export interface RecommendProps {
 }
 
 export interface PageProps {
-  pageNo: number;
+  pageNum: number;
   pageSize: number;
   total: number;
 }
 
 export interface StateProps {
-  bannerList: any[];
+  carouselList: any[];
   recommendList: Array<RecommendProps>;
   recommendPage: PageProps;
 }

@@ -89,7 +89,7 @@ export default {
         // 初始化
         const isRefreshLoading = ref<boolean>(false)
         const initPage = async () => {
-            await getBanner()
+            await getCarousel()
             await getRecommend()
             isRefreshLoading.value = false
         }
@@ -111,7 +111,7 @@ export default {
         })
 
         // 请求轮播列表
-        const getBanner = async () => {
+        const getCarousel = async () => {
             const {
                 data: { list }
             } = await getHomeCarousel()

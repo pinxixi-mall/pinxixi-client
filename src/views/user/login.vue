@@ -57,7 +57,7 @@ const Login = {
     const state = reactive({
       userName: null,
       password: null,
-      avater: null,
+      avatar: null,
       verifyCode: null
     })
 
@@ -95,7 +95,7 @@ const Login = {
 export default Login
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .page {
   width: 375px;
   height: 100vh;
@@ -106,7 +106,7 @@ export default Login
     padding: 20px;
     margin: 70px auto 30px;
   }
-  .avater {
+  .avatar {
     font-size: 90px;
     color: #f35517;
   }

@@ -24,8 +24,8 @@ export default defineConfig({
   },
   base: './', // 打包路径
   server: {
-    host: 'localhost',
-    port: 8080,
+    host: '0.0.0.0',
+    port: 3001,
     open: false,
     cors: true, // 允许跨域
     proxy: {

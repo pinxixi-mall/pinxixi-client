@@ -18,12 +18,12 @@ const emit = defineEmit(["update:modelValue"])
 
 const { width = 110, height = 40, codeLength = 4 } = props
 
-const verifyCodeRef = ref(null)
+const verifyCodeRef = ref<any>(null)
 const TEXTS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 const LINES = 6
 const DOTS = 50
 
-let ctx
+let ctx: any
 
 onMounted(() => {
   ctx = verifyCodeRef.value.getContext("2d")
@@ -46,7 +46,7 @@ const drawCodeImg = () : void => {
 }
 
 // 随机数
-const randomNum = (min, max): number => Math.floor(Math.random() * (max - min) + min)
+const randomNum = (min: number, max: number): number => Math.floor(Math.random() * (max - min) + min)
 
 // 随机颜色
 const randomColor = (min: number, max: number) : string => {

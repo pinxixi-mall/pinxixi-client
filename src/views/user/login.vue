@@ -1,12 +1,11 @@
 <template>
   <div class="page">
-    <!-- <van-image round class="logo" :src="logo" /> -->
-    <van-form @submit="onSubmit" class="login-form" ref="formRef">
+    <van-image class="logo" :src="logo" />
+    <van-form class="login-form" ref="formRef" label-width="50px" @submit="onSubmit">
       <van-field
-        v-model="username"
-        name="username"
+        v-model="userName"
+        name="userName"
         label="用户名"
-        placeholder="请输入"
         :rules="[{ required: true, message: '请输入用户名' }]"
       />
       <van-field
@@ -14,15 +13,14 @@
         type="password"
         name="password"
         label="密码"
-        placeholder="请输入"
         :rules="[{ required: true, message: '请输入密码' }]"
       />
       <van-field
         v-model="verifyCode"
+        name="verifyCode"
         center
         clearable
         label="验证码"
-        placeholder="请输入"
         :rules="[{ required: true, message: '请输入验证码' }, 
         { validator: checkVerifyCode, message: '验证码不正确'}]"
       >
@@ -45,7 +43,7 @@ import { ref, reactive, onMounted, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '@/api/index'
 import { setToken } from '@/utils/utils'
-import logo from '@/assets/icons/logo.png'
+import logo from '@/assets/icons/pxx-logo.png'
 import VerifyCode from '@/components/VerifyCode/index.vue'
 
 const Login = {
@@ -55,9 +53,9 @@ const Login = {
   setup() {
     const router = useRouter()
     const formRef = ref(null)
-    const codeImgText = ref(null)
+    const codeImgText = ref<any>(null)
     const state = reactive({
-      username: null,
+      userName: null,
       password: null,
       avater: null,
       verifyCode: null
@@ -69,12 +67,7 @@ const Login = {
 
     // 登录
     const onSubmit = async (values: any) => {
-      const params = {
-        username: state.username,
-        password: state.password
-      }
-      const { data: { userInfo, token } } = await login(params)
-      state.avater = userInfo.avater
+      const { data: { token } } = await login(values)
       setToken(token)
       router.push('home')
     }
@@ -85,7 +78,7 @@ const Login = {
     }
 
     // 验证码校验
-    const checkVerifyCode = (val) => val.toLowerCase() === codeImgText.value.toLowerCase()
+    const checkVerifyCode = (val: string) => val.toLowerCase() === codeImgText.value.toLowerCase()
 
     return {
       logo,
@@ -109,11 +102,9 @@ export default Login
   display: flex;
   flex-direction: column;
   .logo {
-    width: 80px;
-    height: 80px;
+    height: 50px;
     padding: 20px;
-    margin: 80px auto 50px;
-    background: #eee;
+    margin: 70px auto 30px;
   }
   .avater {
     font-size: 90px;

@@ -2,7 +2,7 @@
   <van-loading class="loading" v-show="isLoading && !isLastPage">加载中...</van-loading>
   <div class="bottom-line" v-if="isLastPage">
     <span class="line"></span>
-    <span>这是我的底线</span>
+    <span>没有更多了</span>
     <span class="line"></span>
   </div>
 </template>

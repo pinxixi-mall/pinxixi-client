@@ -17,8 +17,8 @@
                     </van-search>
                 </van-sticky>
                 <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#fa2c19" lazy-render>
-                    <van-swipe-item v-for="banner in bannerList" :key="banner.id">
-                        <img class="banner-img" :src="banner.imageUrl" />
+                    <van-swipe-item v-for="carousel in carouselList" :key="carousel.carouselId">
+                        <img class="carousel-img" :src="carousel.carouselImage" />
                     </van-swipe-item>
                 </van-swipe>
                 <div class="quick-nav-box">
@@ -39,7 +39,7 @@
                         :key="item.recommendId"
                         @click="handleCommodityClick(item)"
                     >
-                        <van-image class="recomend-item-img" :src="item.imageUrl" />
+                        <van-image class="recomend-item-img" :src="item.carouselImage" />
                         <p class="recomend-item-text van-multi-ellipsis--l2">{{ item.description }}</p>
                         <p class="recomend-item-price">
                             <span class="money-sign">￥</span>
@@ -56,7 +56,7 @@
 
 <script lang="ts">
 import { ref, reactive, onMounted, toRefs, computed } from 'vue'
-import { getHomeBanner, getRecommendList } from '@/api'
+import { getHomeCarousel, getRecommendList } from '@/api'
 import { quickNavList } from '@/mock/base'
 import { RecommendProps, PageProps, StateProps } from '@/types/home'
 import { useScrollToBottom } from '@/use'
@@ -68,11 +68,11 @@ export default {
     setup() {
         const router = useRouter()
         const state: StateProps = reactive({
-            bannerList: [],
+            carouselList: [],
             recommendList: [],
             recommendPage: {
-                pageNo: 1,
-                pageSize: 10,
+                pageNum: 1,
+                pageSize: 5,
                 total: 0
             }
         })
@@ -83,7 +83,7 @@ export default {
         })
 
         onMounted(() => {
-            // initPage()
+            initPage()
         })
 
         // 初始化
@@ -105,7 +105,7 @@ export default {
         const scrollContent = ref()
         useScrollToBottom(scrollBox, scrollContent, () => {
             if (!isLastPage.value) {
-                state.recommendPage.pageNo++
+                state.recommendPage.pageNum++
                 getRecommend()
             }
         })
@@ -114,9 +114,9 @@ export default {
         const getBanner = async () => {
             const {
                 data: { list }
-            } = await getHomeBanner()
+            } = await getHomeCarousel()
 
-            state.bannerList = list || []
+            state.carouselList = list || []
         }
 
         // 请求推荐列表
@@ -124,8 +124,8 @@ export default {
         const getRecommend = async () => {
             isRecommendLoading.value = true
             try {
-                const { pageNo, pageSize } = state.recommendPage
-                const params = { pageNo, pageSize, status: 1 }
+                const { pageNum, pageSize } = state.recommendPage
+                const params = { pageNum, pageSize, status: 1 }
                 const {
                     data: { list, pageData }
                 } = await getRecommendList(params)
@@ -179,7 +179,7 @@ export default {
     font-size: 20px;
     text-align: center;
     margin-top: 10px;
-    .banner-img {
+    .carousel-img {
         width: 92%;
         height: 140px;
         border-radius: 10px;

@@ -1,10 +1,12 @@
+export const TOKEN_KEY = 'ACCESS_TOKEN_CLIENT'
+
 // 未登录
 export const NOT_LOGIN = 4002
 
 // token失效
 export const TOKEN_EXPIRED = 4001
 
-export const BASEURL = process.env.NODE_ENV === 'development' ? 'api' : ''
+export const BASE_URL = process.env.NODE_ENV === 'development' ? 'api' : ''
 
 // 项目模拟地址
 export const MOCK_BASE_URL = ''

@@ -21,18 +21,16 @@
         center
         clearable
         label="验证码"
-        :rules="[{ required: true, message: '请输入验证码' }, 
-        { validator: checkVerifyCode, message: '验证码不正确'}]"
+        :rules="[{ required: true, message: '请输入验证码' },
+        { validator: checkVerifyCode, message: '验证码不正确' }]"
       >
         <template #button>
           <VerifyCode v-model="codeImgText" />
         </template>
       </van-field>
       <div class="submit-btn">
-        <van-button round block type="primary" native-type="submit"> 登录 </van-button>
-        <van-button round block type="primary" plain class="register-btn" @click="onRegister">
-          注册
-        </van-button>
+        <van-button round block type="primary" native-type="submit">登录</van-button>
+        <van-button round block type="primary" plain class="register-btn" @click="onRegister">注册</van-button>
       </div>
     </van-form>
   </div>
@@ -42,11 +40,11 @@
 import { ref, reactive, onMounted, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '@/api/index'
-import { setToken } from '@/utils/utils'
+import { setToken } from '@/utils'
 import logo from '@/assets/icons/pxx-logo.png'
 import VerifyCode from '@/components/VerifyCode/index.vue'
 
-const Login = {
+export default {
   components: {
     VerifyCode
   },
@@ -68,6 +66,8 @@ const Login = {
     // 登录
     const onSubmit = async (values: any) => {
       const { data: { token } } = await login(values)
+      console.log(token);
+      
       setToken(token)
       router.push('home')
     }
@@ -92,7 +92,6 @@ const Login = {
   }
 }
 
-export default Login
 </script>
 
 <style lang="less" scoped>

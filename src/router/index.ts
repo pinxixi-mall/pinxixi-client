@@ -19,7 +19,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'layout',
-    component: () => import('@/layout/layout.vue'),
+    component: () => import('@/layout/index.vue'),
     children: [
       {
         path: 'home',

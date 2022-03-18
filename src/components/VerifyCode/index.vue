@@ -5,16 +5,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, defineProps, defineEmits } from 'vue'
+import { onMounted, ref } from 'vue'
 
-const props = defineProps({
-  modelValue: null,
-  width: Number,
-  height: Number,
-  codeLength: Number
-})
+const props = defineProps<{
+  modelValue?: null,
+  width?: number | string,
+  height?: number | string,
+  codeLength?: number
+}>()
 
-const emit = defineEmits(["update:modelValue"])
+const emit = defineEmits<{
+  (event: 'update:modelValue', code: string): void
+}>()
 
 const { width = 110, height = 40, codeLength = 4 } = props
 

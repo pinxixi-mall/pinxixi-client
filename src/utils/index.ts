@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import { TOKEN_KEY } from '@/config/base'
+import { TOKEN_KEY } from '@/config/constants'
 
 export const setCookie = (key: string, value: string): void => {
   Cookies.set(key, value)

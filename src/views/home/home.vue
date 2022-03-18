@@ -58,7 +58,7 @@
 import { ref, reactive, onMounted, toRefs, computed } from 'vue'
 import { getHomeCarousel, getRecommendList } from '@/api'
 import { quickNavList } from '@/mock/base'
-import { RecommendProps, PageProps, StateProps } from '@/types/home'
+import { RecommendProps, StateProps } from '@/types'
 import { useScrollToBottom } from '@/use'
 import BottomLoading from '@/components/BottomLoading/BottomLoading.vue'
 import { useRouter } from 'vue-router'

@@ -1,16 +1,18 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from '@/router'
-import { store } from '@/store'
-import vantComps from '@/common/vantComps'
-// import '@/libs/flexible'
-import 'lib-flexible/flexible'
+import * as comps from './config/vantComps'
 import 'vant/lib/index.css'
 import '@/styles/index.less'
-// import Vconsole from 'vconsole'
 
 const app = createApp(App)
-app.use(router).use(store).use(vantComps)
-app.mount('#app')
 
-// new Vconsole()
+app.use(router)
+
+for (const key in comps) {
+    if (Object.prototype.hasOwnProperty.call(comps, key)) {
+        app.use(Reflect.get(comps, key))
+    }
+}
+
+app.mount('#app')

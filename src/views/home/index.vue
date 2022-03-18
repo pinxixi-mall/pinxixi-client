@@ -180,7 +180,7 @@ export default {
     text-align: center;
     margin-top: 10px;
     .carousel-img {
-        width: 92%;
+        width: 350px;
         height: 140px;
         border-radius: 10px;
     }

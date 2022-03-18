@@ -19,7 +19,6 @@ class Request {
         // 全局请求拦截器
         this.instance.interceptors.request.use(
             (config: AxiosRequestConfig) => {
-                console.log('全局请求拦截器')
                 const token = getToken()
                 if (token) {
                     config.headers && (config.headers.Authorization = `Bearer ${token}`)

@@ -16,13 +16,15 @@
                         </template>
                     </van-search>
                 </van-sticky>
+                <!-- 轮播图 -->
                 <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#fa2c19" lazy-render>
                     <van-swipe-item v-for="carousel in carouselList" :key="carousel.carouselId">
                         <img class="carousel-img" :src="carousel.carouselImage" />
                     </van-swipe-item>
                 </van-swipe>
+                <!-- 快捷菜单 -->
                 <div class="quick-nav-box">
-                    <van-grid :icon-size="60" :border="false">
+                    <van-grid icon-size="50" :border="false" clickable>
                         <van-grid-item
                             v-for="item in quickNavList"
                             :key="item.id"
@@ -32,18 +34,19 @@
                     </van-grid>
                 </div>
                 <!-- <van-skeleton title :row="3" :loading="isRecommendLoading"> -->
-                <div class="recomend-box">
+                <!-- 推荐商品 -->
+                <div class="recommend-box">
                     <div
-                        class="recomend-item"
+                        class="recommend-item"
                         v-for="item in recommendList"
                         :key="item.recommendId"
                         @click="handleCommodityClick(item)"
                     >
-                        <van-image class="recomend-item-img" :src="item.carouselImage" />
-                        <p class="recomend-item-text van-multi-ellipsis--l2">{{ item.description }}</p>
-                        <p class="recomend-item-price">
+                        <van-image class="recommend-item-img" :src="item.goodsImage" />
+                        <p class="recommend-item-text van-multi-ellipsis--l2">{{ item.recommendDesc }}</p>
+                        <p class="recommend-item-price">
                             <span class="money-sign">￥</span>
-                            <span>{{ item.price }}</span>
+                            <span>{{ item.goodsPrice }}</span>
                         </p>
                     </div>
                     <BottomLoading :isLoading="isRecommendLoading" :isLastPage="isLastPage" />
@@ -125,13 +128,11 @@ export default {
             isRecommendLoading.value = true
             try {
                 const { pageNum, pageSize } = state.recommendPage
-                const params = { pageNum, pageSize, status: 1 }
-                const {
-                    data: { list, pageData }
-                } = await getRecommendList(params)
+                const params = { pageNum, pageSize }
+                const { data } = await getRecommendList(params)
                 const { recommendList } = state
-                state.recommendList = [...recommendList, ...list]
-                Object.assign(state.recommendPage, pageData)
+                state.recommendList = [...recommendList, ...data.list]
+                Object.assign(state.recommendPage, { pageNum: data.pageNum, pageSize: data.pageSize })
                 isRecommendLoading.value = false
             } catch (error) {
                 isRecommendLoading.value = false
@@ -170,9 +171,9 @@ export default {
 
 <style lang="less" scoped>
 .scroll-box {
-    width: 100vw;
-    height: 100%;
-    overflow: auto;
+    // width: 100vw;
+    // height: 100%;
+    // overflow: auto;
 }
 .my-swipe .van-swipe-item {
     color: #fff;
@@ -188,28 +189,28 @@ export default {
 
 .quick-nav-box {
     background: #fff;
-    padding: 12px;
+    padding: 10px 0;
     border-radius: 40px 40px 0 0;
 }
 
-.recomend-box {
+.recommend-box1 {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 10px 5px;
     background: #f5f5f5;
-    .recomend-item {
+    .recommend-item {
         width: 172px;
-        height: 260px;
+        // height: 260px;
         background: #fff;
         border-radius: 8px;
         overflow: hidden;
         margin: 5px;
-        .recomend-item-img {
+        .recommend-item-img {
             width: 172px;
             height: 172px;
         }
-        .recomend-item-text {
+        .recommend-item-text {
             // overflow: hidden;
             // text-overflow: ellipsis;
             // display: -webkit-box;
@@ -218,10 +219,44 @@ export default {
             // -webkit-box-orient: vertical;
             font-size: 14px;
             color: #1a1a1a;
-            padding: 0 4px;
+            padding: 0 8px;
             margin-bottom: 4px;
         }
-        .recomend-item-price {
+        .recommend-item-price {
+            padding: 0 4px;
+            font-size: 16px;
+            color: #fa2c19;
+            font-weight: bold;
+            .money-sign {
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+.recommend-box {
+    padding: 10px 5px;
+    background: #f5f5f5;
+    column-count: 2;
+    column-gap: 20px;
+    .recommend-item {
+        width: 100%;
+        // height: 260px;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        // margin: 5px;
+        .recommend-item-img {
+            // width: 172px;
+            height: 172px;
+        }
+        .recommend-item-text {
+            font-size: 14px;
+            color: #1a1a1a;
+            padding: 0 8px;
+            margin-bottom: 4px;
+        }
+        .recommend-item-price {
             padding: 0 4px;
             font-size: 16px;
             color: #fa2c19;

@@ -1,5 +1,5 @@
 <template>
-  <van-tabbar v-model="active">
+  <van-tabbar v-model="active" class="common-nav">
     <van-tabbar-item icon="home-o" name="/home" url="/#/home">首页</van-tabbar-item>
     <van-tabbar-item icon="apps-o" name="/category" url="/#/category">分类</van-tabbar-item>
     <van-tabbar-item icon="shopping-cart-o" badge="5" name="/cart"  url="/#/cart">购物车</van-tabbar-item>
@@ -26,3 +26,8 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="less" scoped>
+  .common-nav{
+    box-shadow: 0 0 10px 0 hsl(0deg 6% 58% / 60%);
+  }
+</style>

@@ -15,7 +15,7 @@ export default defineComponent({
 
 <style>
 
-body {
+body, p {
   margin: 0;
   padding: 0;
 }

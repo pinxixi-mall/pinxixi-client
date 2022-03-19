@@ -23,5 +23,7 @@ export {
   TreeSelect,
   Card,
   Tag,
-  Uploader
+  Uploader,
+  Row,
+  Col
 } from 'vant'

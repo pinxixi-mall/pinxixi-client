@@ -31,11 +31,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 12px;
   margin: 20px 0;
-  color: #666;
+  color: #888;
   .line {
-    width: 80px;
+    width: 60px;
     height: 1px;
     background: #ccc;
     margin: 0 20px;

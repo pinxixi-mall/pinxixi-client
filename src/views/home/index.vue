@@ -1,14 +1,14 @@
 <template>
     <div class="scroll-box" ref="scrollBox">
         <div ref="scrollContent">
-            <van-pull-refresh v-model="isRefreshLoading" @refresh="onRefresh">
+            <!-- <van-pull-refresh v-model="isRefreshLoading" @refresh="onRefresh"> -->
                 <van-sticky>
                     <van-search
                         v-model="searchValue"
                         shape="round"
                         background="#e43130"
                         show-action
-                        placeholder="请输入搜索关键词"
+                        placeholder="请输入搜索关键词(TODO)"
                         @search="onSearch"
                     >
                         <template #action>
@@ -24,7 +24,7 @@
                 </van-swipe>
                 <!-- 快捷菜单 -->
                 <div class="quick-nav-box">
-                    <van-grid icon-size="50" :border="false" clickable>
+                    <van-grid icon-size="40" :border="false" square clickable column-num="5">
                         <van-grid-item
                             v-for="item in quickNavList"
                             :key="item.id"
@@ -33,26 +33,29 @@
                         />
                     </van-grid>
                 </div>
-                <!-- <van-skeleton title :row="3" :loading="isRecommendLoading"> -->
                 <!-- 推荐商品 -->
-                <div class="recommend-box">
-                    <div
-                        class="recommend-item"
-                        v-for="item in recommendList"
-                        :key="item.recommendId"
-                        @click="handleCommodityClick(item)"
-                    >
-                        <van-image class="recommend-item-img" :src="item.goodsImage" />
-                        <p class="recommend-item-text van-multi-ellipsis--l2">{{ item.recommendDesc }}</p>
-                        <p class="recommend-item-price">
-                            <span class="money-sign">￥</span>
-                            <span>{{ item.goodsPrice }}</span>
-                        </p>
-                    </div>
+                <div class="recommend-box" >
+                    <Waterfall :list="recommendList">
+                        <WaterfallItem
+                            v-for="item in recommendList"
+                            :key="item.recommendId"
+                            @click="handleGoodsClick(item)"
+                        >
+                            <div class="recommend-item">
+                                <van-image class="recommend-item-img" :src="item.goodsImage" />
+                                <p
+                                    class="recommend-item-text van-multi-ellipsis--l2"
+                                >{{ item.recommendDesc }}</p>
+                                <p class="recommend-item-price">
+                                    <span class="money-sign">￥</span>
+                                    <span>{{ item.goodsPrice }}</span>
+                                </p>
+                            </div>
+                        </WaterfallItem>
+                    </Waterfall>
                     <BottomLoading :isLoading="isRecommendLoading" :isLastPage="isLastPage" />
                 </div>
-                <!-- </van-skeleton> -->
-            </van-pull-refresh>
+            <!-- </van-pull-refresh> -->
         </div>
     </div>
 </template>
@@ -60,22 +63,24 @@
 <script lang="ts">
 import { ref, reactive, onMounted, toRefs, computed } from 'vue'
 import { getHomeCarousel, getRecommendList } from '@/api'
-import { quickNavList } from '@/mock/base'
-import { RecommendProps, StateProps } from '@/types'
+import { quickNavList } from '@/mock'
+import { RecommendType, HomeStateType } from '@/types'
 import { useScrollToBottom } from '@/use'
 import BottomLoading from '@/components/BottomLoading/BottomLoading.vue'
 import { useRouter } from 'vue-router'
+import Waterfall from '@/components/Waterfall/index.vue'
+import WaterfallItem from '@/components/WaterfallItem/index.vue'
 
 export default {
-    components: { BottomLoading },
+    components: { BottomLoading, Waterfall, WaterfallItem },
     setup() {
         const router = useRouter()
-        const state: StateProps = reactive({
+        const state: HomeStateType = reactive({
             carouselList: [],
             recommendList: [],
             recommendPage: {
                 pageNum: 1,
-                pageSize: 5,
+                pageSize: 2,
                 total: 0
             }
         })
@@ -100,6 +105,8 @@ export default {
         // 下拉刷新
         const onRefresh = () => {
             isRefreshLoading.value = true
+            state.recommendPage.pageNum = 1
+            state.recommendList = []
             initPage()
         }
 
@@ -132,7 +139,7 @@ export default {
                 const { data } = await getRecommendList(params)
                 const { recommendList } = state
                 state.recommendList = [...recommendList, ...data.list]
-                Object.assign(state.recommendPage, { pageNum: data.pageNum, pageSize: data.pageSize })
+                Object.assign(state.recommendPage, { pageNum: data.pageNum, pageSize: data.pageSize, total: data.total })
                 isRecommendLoading.value = false
             } catch (error) {
                 isRecommendLoading.value = false
@@ -140,7 +147,7 @@ export default {
         }
 
         // 跳推荐详情
-        const handleCommodityClick = (item: RecommendProps) => {
+        const handleGoodsClick = (item: RecommendType) => {
             router.push({
                 path: `/detail/${item.recommendId}`,
             })
@@ -163,7 +170,7 @@ export default {
             isRecommendLoading,
             scrollBox,
             scrollContent,
-            handleCommodityClick
+            handleGoodsClick
         }
     }
 }
@@ -171,9 +178,9 @@ export default {
 
 <style lang="less" scoped>
 .scroll-box {
-    // width: 100vw;
-    // height: 100%;
-    // overflow: auto;
+    width: 100vw;
+    height: 100%;
+    overflow: auto;
 }
 .my-swipe .van-swipe-item {
     color: #fff;
@@ -193,33 +200,24 @@ export default {
     border-radius: 40px 40px 0 0;
 }
 
-.recommend-box1 {
-    display: flex;
+.recommend-box {
     justify-content: space-between;
     flex-wrap: wrap;
-    padding: 10px 5px;
+    padding: 10px;
     background: #f5f5f5;
     .recommend-item {
-        width: 172px;
-        // height: 260px;
-        background: #fff;
+        background: #ffffff;
         border-radius: 8px;
         overflow: hidden;
-        margin: 5px;
-        .recommend-item-img {
-            width: 172px;
+        border: 1px solid #eee;
+        padding-bottom: 10px;
+        .recommend-item-img{
             height: 172px;
         }
         .recommend-item-text {
-            // overflow: hidden;
-            // text-overflow: ellipsis;
-            // display: -webkit-box;
-            // -webkit-line-clamp: 2;
-            // line-clamp: 2;
-            // -webkit-box-orient: vertical;
             font-size: 14px;
             color: #1a1a1a;
-            padding: 0 8px;
+            padding: 8px 8px 0;
             margin-bottom: 4px;
         }
         .recommend-item-price {
@@ -234,37 +232,4 @@ export default {
     }
 }
 
-.recommend-box {
-    padding: 10px 5px;
-    background: #f5f5f5;
-    column-count: 2;
-    column-gap: 20px;
-    .recommend-item {
-        width: 100%;
-        // height: 260px;
-        background: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        // margin: 5px;
-        .recommend-item-img {
-            // width: 172px;
-            height: 172px;
-        }
-        .recommend-item-text {
-            font-size: 14px;
-            color: #1a1a1a;
-            padding: 0 8px;
-            margin-bottom: 4px;
-        }
-        .recommend-item-price {
-            padding: 0 4px;
-            font-size: 16px;
-            color: #fa2c19;
-            font-weight: bold;
-            .money-sign {
-                font-size: 12px;
-            }
-        }
-    }
-}
 </style>

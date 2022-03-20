@@ -1,18 +1,25 @@
-export interface RecommendProps {
+export interface RecommendType {
     imageUrl: string;
     description: string;
     price: number;
     recommendId: number;
 }
 
-export interface PageProps {
+export interface PageType {
     pageNum: number;
     pageSize: number;
     total: number;
 }
 
-export interface StateProps {
+export interface HomeStateType {
     carouselList: any[];
-    recommendList: Array<RecommendProps>;
-    recommendPage: PageProps;
+    recommendList: Array<RecommendType>;
+    recommendPage: PageType;
+}
+
+export interface GoodsCategoryType {
+    categoryId: number;
+    categoryName: string;
+    categoryLevel: number;
+    categoryImage: number;
 }

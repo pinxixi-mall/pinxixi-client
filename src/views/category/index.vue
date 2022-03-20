@@ -1,122 +1,83 @@
 <template>
   <div class="fixed-to-top van-hairline--bottom">
-    <van-search v-model="searchValue" shape="round" show-action placeholder="请输入搜索关键词">
+    <van-search v-model="searchValue" shape="round" show-action placeholder="请输入搜索关键词(TODO)">
       <template #action>
         <div>搜索</div>
       </template>
     </van-search>
   </div>
-  <div class="category-box" ref="siderbarBoxRef">
-    <div class="siderbar-box" ref="siderbarRef">
-      <van-sidebar class="siderbar" v-model="currentBar">
-        <van-sidebar-item title="标签1" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称" />
-        <van-sidebar-item title="标签名称999" />
-      </van-sidebar>
+  <div class="category-box">
+    <van-sidebar class="level-1" v-model="currentBar" @change="onLevel1Change">
+      <van-sidebar-item :title="item.categoryName" v-for="item in leftList" :key="item.categoryId" />
+    </van-sidebar>
+    <div class="content">
+      <div class="level-2" v-for="item in rightList" :key="item.categoryId">
+        <h4 class="title">{{ item.categoryName }}</h4>
+        <van-grid square :column-num="3" :icon-size="60" :border="false">
+          <van-grid-item
+            v-for="it in item.children"
+            :key="it.categoryId"
+            :icon="it.categoryImage"
+            :text="it.categoryName"
+          />
+        </van-grid>
+      </div>
     </div>
-    <div class="category-content">999</div>
   </div>
 </template>
 
 <script lang="ts">
-import { onMounted, ref, unref, reactive } from 'vue'
-import { useEventListener } from '@vant/use'
+import { getGoodsCategoryTree } from '@/api'
+import { onMounted, ref, reactive, toRefs } from 'vue'
+
+interface StateType {
+  leftList: any[];
+  rightList: any[];
+}
 
 export default {
   setup() {
     const searchValue = ref()
     const currentBar = ref()
-    const siderbarRef = ref()
-    const siderbarBoxRef = ref()
-    const touchData = reactive({
-      curY: 0,
-      curTop: 0,
-      disY: 0
+    const state = reactive<StateType>({
+      leftList: [],
+      rightList: [],
     })
 
-    onMounted(() => {
+    onMounted(async () => {
+      initPage()
     })
 
-    const touchstart = (e: any) => {
-      const siderbarEle = unref(siderbarRef)
-      const siderbarBoxEle = unref(siderbarBoxRef)
-      const {
-        targetTouches: [touch]
-      } = e
-      touchData.curY = touch.pageY
-      touchData.curTop = parseInt(siderbarEle.style.top || 0)
-      console.log('------log------', siderbarEle.offsetHeight)
-      console.log('------log------', siderbarBoxEle.offsetHeight)
-      console.log('------log------', siderbarEle)
+    const initPage = async () => {
+      // 查询所有分类
+      state.leftList = await getTreeList()
+
+      // 默认显示第一级分类的二、三级
+      state.rightList = getChildren(0)
     }
 
-    const touchmove = (e: any) => {
-      const siderbarEle = unref(siderbarRef)
-      const {
-        targetTouches: [touch]
-      } = e
-      const disY = touch.pageY - touchData.curY
-      const curTop = touchData.curTop
-      if (parseInt(siderbarEle.style.top || 0) <= 300) {
-        console.log('------disY------', touchData.disY,'------curTop------', parseInt(siderbarEle.style.top || 0))
-        touchData.disY = disY
-        siderbarEle.style.top = `${curTop + disY}px`
-      }
+    // 获取一级分类下面的所有子级
+    const getChildren = (index: number) => {
+      const item: any = state.leftList.find(it => it.categoryId === state.leftList[index].categoryId)
+      return item.children
     }
 
-    const touchend = () => {
-      const siderbarEle = unref(siderbarRef)
-      console.log('------disY------', touchData.disY,'------curTop------', parseInt(siderbarEle.style.top || 0))
-      const curTop = parseInt(siderbarEle.style.top || 0)
-      if (touchData.disY > 0 && curTop >= 0) {
-        slideToTop()
-      } else {
-        // slideToBottom()
-      }
+    // 获取所有分类
+    const getTreeList = async () => {
+      const { data } = await getGoodsCategoryTree()
+      return data || []
     }
 
-    // 回弹到顶部
-    const slideToTop = () => {
-      const siderbarEle = unref(siderbarRef)
-      let start: number = touchData.disY
-      let step = 10
-
-      const animation = (timestamp: any) => {
-        step += 1
-        start -= step
-        if (start >= 0) {
-          siderbarEle.style.top = `${start}px`
-          window.requestAnimationFrame(animation)
-        } else {
-          siderbarEle.style.top = 0
-          touchData.curTop = 0
-          touchData.disY = 0
-        }
-      }
-      window.requestAnimationFrame(animation)
+    // 一级分类切换
+    const onLevel1Change = (index: number) => {
+      state.rightList = getChildren(index)
     }
-
-    useEventListener('touchstart', touchstart, { target: siderbarRef })
-    useEventListener('touchmove', touchmove, { target: siderbarRef })
-    useEventListener('touchend', touchend, { target: siderbarRef })
 
     return {
+      ...toRefs(state),
       currentBar,
       searchValue,
-      siderbarRef,
-      siderbarBoxRef
+      onLevel1Change
     }
   }
 }
@@ -124,26 +85,33 @@ export default {
 
 <style lang="less">
 .category-box {
-  // height: calc(100vh - 100px);
-  // margin-top: 50px;
+  height: calc(100vh - 100px);
   width: 100%;
   position: absolute;
   top: 50px;
-  bottom: 50px;
-  .siderbar-box {
+  .level-1 {
     position: absolute;
     top: 0;
     bottom: 0;
-    .siderbar {
-      height: 100%;
-      overflow: hidden;
-    }
+    overflow-y: auto;
+    background-color: #f8f8f8;
   }
-  .category-content {
+  .content {
     position: absolute;
     top: 0;
-    left: 100px;
+    left: 90px;
     right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 0 0 40px;
+    .level-2 {
+      padding: 10px 0;
+      .title{
+        font-size: 14px;
+        color: #333;
+        padding: 10px 0;
+      }
+    }
   }
 }
 </style>

@@ -7,7 +7,7 @@ export function useScrollToBottom(scrollBox: any, scrollContent: any,  callback:
   const listener = () => {
     const { offsetHeight: boxHeight, scrollTop } = unref(scrollBox)
     const { offsetHeight: contentHeight } = unref(scrollContent)
-    if (boxHeight + scrollTop === contentHeight) {
+    if (boxHeight + scrollTop >= contentHeight) {
       callback()
     }
   }

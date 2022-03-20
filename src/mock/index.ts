@@ -26,17 +26,27 @@ export const quickNavList = [
   },
   {
     id: 6,
-    name: '9.9元拼',
+    name: '领券',
     icon: '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/113589/24/11332/4897/5efbf3feE705d87db/e5c12d5e943266b9.png.webp'
   },
   {
     id: 7,
-    name: '领券',
-    icon: '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/131663/33/3380/3674/5efbf50fEf79cf314/af4b57d2383e605d.png.webp'
+    name: '医药',
+    icon: 'https://m15.360buyimg.com/mobilecms/jfs/t1/184220/15/16402/5719/6103a727Eee850902/0f552e380db9cd0e.png!q70.jpg'
   },
   {
     id: 8,
     name: '进口',
     icon: '//m.360buyimg.com/mobilecms/s120x120_jfs/t1/142596/7/1864/4759/5efbf5a9E60c62b8a/49cdd24cb2bfecf5.png.webp'
+  },
+  {
+    id: 9,
+    name: '物流',
+    icon: 'https://m15.360buyimg.com/mobilecms/jfs/t1/199143/10/8979/4223/614599f5E45cd5464/d15aa650a0ebe596.png!q70.jpg'
+  },
+  {
+    id: 10,
+    name: '会员',
+    icon: 'https://m15.360buyimg.com/mobilecms/jfs/t1/37709/6/15279/6118/60ec1046E4b5592c6/a7d6b66354efb141.png!q70.jpg'
   }
 ]

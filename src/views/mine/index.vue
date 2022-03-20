@@ -1,40 +1,8 @@
 <template>
-    <waterfall :column="3" :gutter="10">
-        <waterfall-slot>
-            <div class="item">
-                <p class="card-text">222-This is a short card.</p>
-                <p class="card-text">222-This is a short card.</p>
-                <p class="card-text">222-This is a short card.</p>
-                <p class="card-text">222-This is a short card.</p>
-            </div>
-        </waterfall-slot>
-        <waterfall-slot>
-            <div class="item">
-                <p class="card-text">222-This is a short card.</p>
-                <p class="card-text">222-This is a short card.</p>
-            </div>
-        </waterfall-slot>
-        <waterfall-slot>
-            <div class="item">
-                <p class="card-text">222-This is a short card.</p>
-                <p class="card-text">222-This is a short card.</p>
-                <p class="card-text">222-This is a short card.</p>
-                <p class="card-text">222-This is a short card.</p>
-            </div>
-        </waterfall-slot>
-        <waterfall-slot>
-            <div class="item">
-                <p class="card-text">222-This is a short card.</p>
-                <p class="card-text">222-This is a short card.</p>
-                <p class="card-text">222-This is a short card.</p>
-            </div>
-        </waterfall-slot>
-    </waterfall>
+    <p>5555566666666</p>
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue'
-import Waterfall from './waterfall.vue'
-import WaterfallSlot from './waterfall-slot.vue'
 
 export default {
     name: "demo",
@@ -42,11 +10,9 @@ export default {
         const colRef = ref<any>([]);
 
 
-
         return {
         };
     },
-    components: { WaterfallSlot, Waterfall }
 }
 </script>
 

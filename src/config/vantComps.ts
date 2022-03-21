@@ -25,5 +25,9 @@ export {
   Tag,
   Uploader,
   Row,
-  Col
+  Col,
+  Checkbox,
+  CheckboxGroup,
+  Stepper,
+  SubmitBar
 } from 'vant'

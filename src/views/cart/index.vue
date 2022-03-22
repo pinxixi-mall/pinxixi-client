@@ -1,6 +1,6 @@
 <template>
   <!-- 顶部菜单 -->
-  <van-nav-bar title="购物车" :right-text="rightBtnText" @click-right="onClickRight" />
+  <van-nav-bar title="购物车" :right-text="rightBtnText" fixed @click-right="onClickRight" />
   <!-- 购物车列表 -->
   <van-checkbox-group class="goods-wrapper" v-model="checked" ref="checkboxGroup">
     <van-checkbox
@@ -11,9 +11,9 @@
       :label-disabled="true"
     >
       <van-card
-        :price="item.price"
+        :price="item.price.toFixed(PRICE_DECIMAL)"
         desc="描述信息"
-        title="商品标题"
+        :title="item.goodsName"
         thumb="https://img.yzcdn.cn/vant/ipad.jpeg"
       >
         <template #footer>
@@ -50,7 +50,7 @@
 <script lang="ts">
 import { CheckboxGroupInstance, Toast } from 'vant'
 import { computed, reactive, ref, toRefs, watch } from 'vue'
-import { PURCHASE_QUANTITY_MIN, PURCHASE_QUANTITY_MAX } from '@/config/constants'
+import { PURCHASE_QUANTITY_MIN, PURCHASE_QUANTITY_MAX, PRICE_DECIMAL } from '@/config/constants'
 import SubmitBar from '@/components/SubmitBar'
 
 export default {
@@ -59,10 +59,10 @@ export default {
     const checkboxGroup = ref<CheckboxGroupInstance>()
     const state = reactive({
       goodsList: [
-        { goodsName: 'a', count: 1, price: 1900.00 },
-        { goodsName: 'b', count: 1, price: 19.01 },
-        { goodsName: 'c', count: 1, price: 19 },
-        { goodsName: 'd', count: 1, price: 19 }
+        { goodsName: '描述信息2', count: 1, price: 1900.00 },
+        { goodsName: '描述信息2', count: 2, price: 19.01 },
+        { goodsName: '描述信息2', count: 1, price: 36.789 },
+        { goodsName: '描述信息2', count: 3, price: 19 }
       ],
       checked: [],
       checkedAll: false,
@@ -95,7 +95,7 @@ export default {
 
     // 计算总金额
     const calcTotalPrice = () => {
-      state.totalPrice = state.checked.reduce((ret: any, it: any) => ret + it.price, 0)
+      state.totalPrice = state.checked.reduce((ret: any, it: any) => ret + it.price * it.count, 0) * 100
     }
 
     // 编辑
@@ -122,6 +122,7 @@ export default {
       checkboxGroup,
       PURCHASE_QUANTITY_MIN,
       PURCHASE_QUANTITY_MAX,
+      PRICE_DECIMAL,
       rightBtnText,
       onSubmit,
       onCheckedAll,
@@ -135,7 +136,7 @@ export default {
 
 <style lang="less" scoped>
 .goods-wrapper {
-  padding: 0 16px 90px;
+  padding: 50px 16px 90px;
   background-color: #fff;
   .goods-item {
     margin: 16px 0;

@@ -23,3 +23,10 @@ export interface GoodsCategoryType {
     categoryLevel: number;
     categoryImage: number;
 }
+
+export interface GoodsType {
+  goodsName: string;
+  goodsImage: string;
+  goodsPrice: number;
+  goodsDesc: string;
+}

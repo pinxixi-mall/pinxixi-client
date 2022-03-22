@@ -19,3 +19,6 @@ export const PURCHASE_QUANTITY_MIN = 1
 
 // 最大购买数量
 export const PURCHASE_QUANTITY_MAX = 99
+
+// 商品价格小数位
+export const PRICE_DECIMAL = 2

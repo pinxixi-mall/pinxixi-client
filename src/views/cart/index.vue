@@ -136,7 +136,7 @@ export default {
 
 <style lang="less" scoped>
 .goods-wrapper {
-  padding: 50px 16px 90px;
+  padding: 40px 16px 90px;
   background-color: #fff;
   .goods-item {
     margin: 16px 0;

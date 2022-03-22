@@ -6,11 +6,11 @@ import './index.less'
 const bem = (name?: string | string[]): string => {
   let className: string = ''
   if (name && typeof name === 'string') {
-    className = `van-submit-bar__${name}`
+    className = `pxx-submit-bar__${name}`
   } else if (name && Array.isArray(name)) {
-    className = name.reduce((ret, it) => `van-submit-bar__${ret}` + ' ' + `van-submit-bar__${it}`)
+    className = name.reduce((ret, it) => `pxx-submit-bar__${ret}` + ' ' + `pxx-submit-bar__${it}`)
   } else {
-    className = 'van-submit-bar'
+    className = 'pxx-submit-bar'
   }
   return className
 }

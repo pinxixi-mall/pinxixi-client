@@ -29,5 +29,7 @@ export {
   Checkbox,
   CheckboxGroup,
   Stepper,
-  SubmitBar
+  SubmitBar,
+  Cell,
+  CellGroup
 } from 'vant'

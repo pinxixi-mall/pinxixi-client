@@ -35,3 +35,8 @@ export const getGoodsCategoryTree = (data?: any) => http.get({
     url: `/client/goods/category/tree`,
     params: data
 })
+
+// 商品详情
+export const getGoodsDetail = (id: number) => http.get({
+    url: `/client/goods/detail/${id}`,
+})

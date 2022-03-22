@@ -1,0 +1,57 @@
+.van-submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: var(--van-submit-bar-z-index);
+  width: 100%;
+  background: var(--van-submit-bar-background-color);
+  user-select: none;
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: var(--van-submit-bar-height);
+    padding: var(--van-submit-bar-padding);
+    font-size: var(--van-submit-bar-text-font-size);
+  }
+
+  &__text {
+    flex: 1;
+    padding-right: var(--van-padding-sm);
+    color: var(--van-submit-bar-text-color);
+    text-align: right;
+
+    span {
+      display: inline-block;
+    }
+  }
+
+  &__suffix-label {
+    margin-left: var(--van-padding-base);
+    font-weight: var(--van-font-weight-bold);
+  }
+
+  &__price {
+    color: var(--van-submit-bar-price-color);
+    font-weight: var(--van-font-weight-bold);
+    font-size: var(--van-submit-bar-price-font-size);
+    margin-left: var(--van-padding-base);
+
+    &-integer {
+      font-size: var(--van-submit-bar-price-integer-font-size);
+      font-family: var(--van-submit-bar-price-font-family);
+    }
+  }
+
+  &__button {
+    width: var(--van-submit-bar-button-width);
+    height: var(--van-submit-bar-button-height);
+    font-weight: var(--van-font-weight-bold);
+    border: none;
+
+    &__danger {
+      background: var(--van-gradient-red);
+    }
+  }
+}

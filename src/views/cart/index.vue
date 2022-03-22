@@ -1,46 +1,133 @@
 <template>
+  <!-- 顶部菜单 -->
+  <van-nav-bar title="购物车" :right-text="rightBtnText" @click-right="onClickRight" />
+  <!-- 购物车列表 -->
   <van-checkbox-group class="goods-wrapper" v-model="checked" ref="checkboxGroup">
     <van-checkbox
       class="goods-item"
-      name="c"
       v-for="(item, index) in goodsList"
       :key="index"
+      :name="item"
       :label-disabled="true"
     >
-      <van-card price="2.00" desc="描述信息" title="商品标题" thumb="https://img.yzcdn.cn/vant/ipad.jpeg">
+      <van-card
+        :price="item.price"
+        desc="描述信息"
+        title="商品标题"
+        thumb="https://img.yzcdn.cn/vant/ipad.jpeg"
+      >
         <template #footer>
-          <van-stepper class="stepper" v-model="item.count" step="1" :min="0" />
+          <van-stepper
+            class="stepper"
+            v-model="item.count"
+            step="1"
+            :min="PURCHASE_QUANTITY_MIN"
+            :max="PURCHASE_QUANTITY_MAX"
+            @overlimit="onCountChange"
+          />
         </template>
       </van-card>
     </van-checkbox>
   </van-checkbox-group>
-  <van-submit-bar class="submit-bar" :price="3050" button-text="提交订单" @submit="onSubmit">
-    <van-checkbox v-model="checkedAll">全选</van-checkbox>
-    <template #tip>
-      你的收货地址不支持配送,
-      <span>修改地址</span>
+  <!-- 提交 -->
+  <submit-bar
+    class="submit-bar"
+    :price="totalPrice"
+    :button-size="100"
+    :show-total="showTotal"
+    :button-text="'提交订单(' + checked.length + ')'"
+    @submit="onSubmit"
+  >
+    <van-checkbox v-model="checkedAll" @click="onCheckedAll">全选</van-checkbox>
+    <template #button v-if="!showTotal">
+      <van-button class="submit-bar-delete" plain type="danger" round size="mini">{{
+        '删除(' + checked.length + ')'
+      }}</van-button>
     </template>
-  </van-submit-bar>
+  </submit-bar>
 </template>
 
 <script lang="ts">
-import { reactive, toRefs } from "vue"
+import { CheckboxGroupInstance, Toast } from 'vant'
+import { computed, reactive, ref, toRefs, watch } from 'vue'
+import { PURCHASE_QUANTITY_MIN, PURCHASE_QUANTITY_MAX } from '@/config/constants'
+import SubmitBar from '@/components/SubmitBar'
 
 export default {
+  components: { SubmitBar },
   setup() {
+    const checkboxGroup = ref<CheckboxGroupInstance>()
     const state = reactive({
-      goodsList: [{ count: 1 }, { count: 1 }, { count: 1 }, { count: 1 }],
+      goodsList: [
+        { goodsName: 'a', count: 1, price: 1900.00 },
+        { goodsName: 'b', count: 1, price: 19.01 },
+        { goodsName: 'c', count: 1, price: 19 },
+        { goodsName: 'd', count: 1, price: 19 }
+      ],
       checked: [],
-      checkedAll: false
+      checkedAll: false,
+      showTotal: true,
+      totalPrice: 0
     })
 
-    const onSubmit = () => {
+    // 单条选中
+    watch(
+      () => state.checked,
+      () => {
+        state.checkedAll = state.checked.length === state.goodsList.length
+        calcTotalPrice()
+      }
+    )
 
+    // 全选<->取消全选
+    const onCheckedAll = () => {
+      checkboxGroup.value?.toggleAll(state.checkedAll)
+    }
+
+    // 购买数量边界提示
+    const onCountChange = (value: string) => {
+      const tips = <any>{
+        minus: `至少购买${PURCHASE_QUANTITY_MIN}件哦`,
+        plus: `最多只能购买${PURCHASE_QUANTITY_MAX}件`
+      }
+      Toast(tips[value])
+    }
+
+    // 计算总金额
+    const calcTotalPrice = () => {
+      state.totalPrice = state.checked.reduce((ret: any, it: any) => ret + it.price, 0)
+    }
+
+    // 编辑
+    const rightBtnText = computed(() => {
+      return state.showTotal ? '编辑' : '完成'
+    })
+    const onClickRight = () => {
+      state.showTotal = !state.showTotal
+    }
+
+    // 删除
+    const onDelete = () => {}
+
+    // 提交
+    const onSubmit = () => {
+      if (state.checked.length === 0) {
+        Toast('您还没有选择商品哦')
+        return
+      }
     }
 
     return {
       ...toRefs(state),
-      onSubmit
+      checkboxGroup,
+      PURCHASE_QUANTITY_MIN,
+      PURCHASE_QUANTITY_MAX,
+      rightBtnText,
+      onSubmit,
+      onCheckedAll,
+      onCountChange,
+      onClickRight,
+      onDelete
     }
   }
 }
@@ -60,17 +147,43 @@ export default {
       .van-card {
         padding-left: 8px;
         background-color: #fff;
+        .van-card__price {
+          color: var(--van-submit-bar-price-color);
+        }
         .stepper {
           position: absolute;
-          bottom: 4px;
+          bottom: 6px;
           right: 0;
+          border: 1px solid var(--van-gray-3);
+          border-radius: 40px;
+          overflow: hidden;
+          .van-stepper__minus,
+          .van-stepper__plus {
+            width: 26px;
+            height: 26px;
+            &::before {
+              width: 40%;
+            }
+            &::after {
+              height: 40%;
+            }
+          }
+          .van-stepper__input {
+            height: 26px;
+            margin: 0;
+            border-left: 1px solid var(--van-gray-3);
+            border-right: 1px solid var(--van-gray-3);
+          }
         }
       }
     }
   }
 }
 
-.submit-bar{
+.submit-bar {
   bottom: 50px;
+  &-delete{
+    padding: 0 12px;
+  }
 }
 </style>

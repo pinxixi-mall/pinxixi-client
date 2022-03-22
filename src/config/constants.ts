@@ -13,3 +13,9 @@ export const MOCK_BASE_URL = ''
 
 // 请求超时时间 10秒
 export const TIMEOUT = 10000
+
+// 最小购买数量
+export const PURCHASE_QUANTITY_MIN = 1
+
+// 最大购买数量
+export const PURCHASE_QUANTITY_MAX = 99

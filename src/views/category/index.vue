@@ -7,7 +7,7 @@
     </van-search>
   </div>
   <div class="category-box">
-    <van-sidebar class="level-1" v-model="currentBar" @change="onLevel1Change">
+    <van-sidebar class="level-1" v-model="levelOne" @change="onLevelOneChange">
       <van-sidebar-item :title="item.categoryName" v-for="item in leftList" :key="item.categoryId" />
     </van-sidebar>
     <div class="content">
@@ -38,7 +38,7 @@ interface StateType {
 export default {
   setup() {
     const searchValue = ref()
-    const currentBar = ref()
+    const levelOne = ref()
     const state = reactive<StateType>({
       leftList: [],
       rightList: [],
@@ -69,15 +69,15 @@ export default {
     }
 
     // 一级分类切换
-    const onLevel1Change = (index: number) => {
+    const onLevelOneChange = (index: number) => {
       state.rightList = getChildren(index)
     }
 
     return {
       ...toRefs(state),
-      currentBar,
+      levelOne,
       searchValue,
-      onLevel1Change
+      onLevelOneChange
     }
   }
 }

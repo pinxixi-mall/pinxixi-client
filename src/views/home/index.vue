@@ -149,7 +149,7 @@ export default {
         // 跳推荐详情
         const handleGoodsClick = (item: RecommendType) => {
             router.push({
-                path: `/detail/${item.recommendId}`,
+                path: `/goods/detail/${item.recommendId}`,
             })
         }
 

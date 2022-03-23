@@ -14,34 +14,15 @@
       :name="item"
       :label-disabled="true"
     >
-      <van-card
-        :price="item.goodsPrice.toFixed(PRICE_DECIMAL)"
-        :title="item.goodsName"
-        :thumb="item.goodsImage"
-      >
-      <template #desc>
-        <span class="van-multi-ellipsis--l2">{{item.goodsDesc}}</span>
-      </template>
-        <template #num>
-          <van-stepper
-            class="stepper"
-            v-model="item.goodsCount"
-            step="1"
-            :min="PURCHASE_QUANTITY_MIN"
-            :max="PURCHASE_QUANTITY_MAX"
-            @overlimit="onCountChange"
-          />
-        </template>
-      </van-card>
-      <!-- <section class="goods-card">
-        <van-image class="goods-image" :src="item.goodsImage" width="90" />
+      <section class="goods-card">
+        <van-image class="goods-image" :src="item.goodsImage" width="100" />
         <div class="goods-info">
           <div class="info">
             <p class="name van-multi-ellipsis--l1">{{ item.goodsName }}</p>
             <p class="desc van-multi-ellipsis--l2">{{ item.goodsDesc }}</p>
           </div>
           <div class="price-stepper">
-            <p class="price price-value">{{ item.goodsPrice }}</p>
+            <p class="price price-value">{{ item.goodsPrice.toFixed(PRICE_DECIMAL) }}</p>
             <van-stepper
               class="stepper"
               v-model="item.goodsCount"
@@ -52,7 +33,7 @@
             />
           </div>
         </div>
-      </section> -->
+      </section>
     </van-checkbox>
   </van-checkbox-group>
   <!-- 提交 -->
@@ -179,8 +160,8 @@ export default {
 
 <style lang="less" scoped>
 .goods-wrapper {
-  // height: 100vh;
-  padding: 46px 16px 90px;
+  height: 100vh;
+  padding: 46px 16px 100px;
   box-sizing: border-box;
   background-color: var(--pxx-page-background);
   .goods-item {
@@ -192,8 +173,9 @@ export default {
 
     .goods-card {
       display: flex;
+      padding-left: 4px;
       .goods-image{
-        border-radius: 4px;
+        border-radius: 6px;
         overflow: hidden;
       }
       .goods-info {
@@ -204,13 +186,14 @@ export default {
         padding-left: 10px;
         .info {
           .name{
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
             color: var(--van-gray-8);
           }
           .desc{
             color: var(--van-gray-7);
             line-height: 14px;
+            margin-top: 2px;
           }
         }
         .price-stepper {
@@ -218,6 +201,7 @@ export default {
           justify-content: space-between;
           align-items: flex-end;
           .price-value {
+            font-weight: 500;
           }
           :deep(.van-stepper) {
             border: 1px solid var(--van-gray-3);
@@ -240,41 +224,6 @@ export default {
               border-left: 1px solid var(--van-gray-3);
               border-right: 1px solid var(--van-gray-3);
             }
-          }
-        }
-      }
-    }
-    :deep(.van-checkbox__label) {
-      flex: 1;
-      .van-card {
-        padding: 0 0 0 8px;
-        background-color: #fff;
-        .van-card__price {
-          color: var(--van-primary-color);
-        }
-        .stepper {
-          // position: absolute;
-          bottom: 6px;
-          right: 0;
-          border: 1px solid var(--van-gray-3);
-          border-radius: 40px;
-          overflow: hidden;
-          .van-stepper__minus,
-          .van-stepper__plus {
-            width: 26px;
-            height: 26px;
-            &::before {
-              width: 40%;
-            }
-            &::after {
-              height: 40%;
-            }
-          }
-          .van-stepper__input {
-            height: 26px;
-            margin: 0;
-            border-left: 1px solid var(--van-gray-3);
-            border-right: 1px solid var(--van-gray-3);
           }
         }
       }

@@ -2,7 +2,7 @@
   <!-- 顶部导航 -->
   <van-nav-bar title="商品详情" left-arrow fixed @click-left="onClickBack">
     <template #right>
-      <van-icon name="cart-o" badge="2" size="20" />
+      <van-icon name="cart-o" badge="2" size="20" @click="onNavToCart" />
     </template>
   </van-nav-bar>
   <!-- 商品信息 -->
@@ -77,6 +77,9 @@ const getDetail = async () => {
 const router = useRouter()
 const onClickBack = () => {
   router.go(-1)
+}
+const onNavToCart = () => {
+  router.push('/cart')
 }
 
 const state = reactive<{

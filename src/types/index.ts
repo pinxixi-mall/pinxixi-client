@@ -36,7 +36,18 @@ export interface GoodsType {
 // 路径参数id
 export type PathIdType = number | string | string[]
 
+// 新增购物车
 export interface CartItemAddType {
   goodsId: number;
   goodsCount: number;
+}
+
+// 购物车项
+export interface CartItemType {
+  goodsId: number;
+  goodsName: string;
+  goodsDesc: string;
+  goodsCount: number;
+  goodsPrice: number;
+  goodsImage: string;
 }

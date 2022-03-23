@@ -44,7 +44,13 @@ class Request {
                 const { data } = res
                 if (data && data.code !== 200) {
                     if (data.code === NOT_LOGIN) {
-                        setToken('')
+                      setToken('')
+                      Dialog.alert({
+                        title: '提示',
+                        message: '请登录后再操作'
+                      }).then(() => {
+                        router.replace('/login')
+                      })
                     } else if (data.code === TOKEN_EXPIRED) {
                         setToken('')
                         Dialog.alert({
@@ -64,6 +70,7 @@ class Request {
                 return data
             },
             (err: any) => {
+                const { response } = err
                 let error = {
                     code: -1,
                     msg: '请求异常',
@@ -73,12 +80,12 @@ class Request {
                 if (err.code === 'ECONNABORTED') {
                     error.msg = '网络繁忙，请稍后再试'
                 }
-                if (err.response && err.response.status && err.response.status === 404) {
+                if (response && response.status && response.status === 404) {
                     error.msg = '路径地址不正确'
                 }
-                if (err.response && err.response.status && err.response.status === 400) {
+                if (response && response.status && response.status === 400) {
                     let strMsg = []
-                    let errData = err.response.data && err.response.data.data
+                    let errData = response.data && response.data.data
                     if (errData && errData) {
                         for (let errKey in errData) {
                             strMsg.push(errData[errKey])

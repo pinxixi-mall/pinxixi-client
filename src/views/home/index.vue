@@ -64,12 +64,18 @@
 import { ref, reactive, onMounted, toRefs, computed } from 'vue'
 import { getHomeCarousel, getRecommendList } from '@/api'
 import { quickNavList } from '@/mock'
-import { RecommendType, HomeStateType } from '@/types'
+import { RecommendType, PageType } from '@/types'
 import { useScrollToBottom } from '@/use'
 import BottomLoading from '@/components/BottomLoading/BottomLoading.vue'
 import { useRouter } from 'vue-router'
 import Waterfall from '@/components/Waterfall/index.vue'
 import WaterfallItem from '@/components/WaterfallItem/index.vue'
+
+interface HomeStateType {
+    carouselList: any[];
+    recommendList: Array<RecommendType>;
+    recommendPage: PageType;
+}
 
 export default {
     components: { BottomLoading, Waterfall, WaterfallItem },
@@ -149,7 +155,7 @@ export default {
         // 跳推荐详情
         const handleGoodsClick = (item: RecommendType) => {
             router.push({
-                path: `/goods/detail/${item.recommendId}`,
+                path: `/goods/detail/${item.goodsId}`,
             })
         }
 
@@ -204,12 +210,12 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 10px;
-    background: #f5f5f5;
+    background: var(--pxx-page-background);
     .recommend-item {
         background: #ffffff;
         border-radius: 8px;
         overflow: hidden;
-        border: 1px solid #eee;
+        border: 1px solid var(--van-pray-6);
         padding-bottom: 10px;
         .recommend-item-img{
             height: 172px;
@@ -223,7 +229,7 @@ export default {
         .recommend-item-price {
             padding: 0 4px;
             font-size: 16px;
-            color: #fa2c19;
+            color: var(--van-primary-color);
             font-weight: bold;
             .money-sign {
                 font-size: 12px;

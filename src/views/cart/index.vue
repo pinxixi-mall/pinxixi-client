@@ -49,9 +49,10 @@
 
 <script lang="ts">
 import { CheckboxGroupInstance, Toast } from 'vant'
-import { computed, reactive, ref, toRefs, watch } from 'vue'
+import { computed, onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { PURCHASE_QUANTITY_MIN, PURCHASE_QUANTITY_MAX, PRICE_DECIMAL } from '@/config/constants'
 import SubmitBar from '@/components/SubmitBar'
+import { getCartList } from '@/api'
 
 export default {
   components: { SubmitBar },
@@ -69,6 +70,14 @@ export default {
       showTotal: true,
       totalPrice: 0
     })
+
+    onMounted(() => {
+      getList()
+    })
+
+    const getList = async () => {
+      const { data } = await getCartList()
+    }
 
     // 单条选中
     watch(

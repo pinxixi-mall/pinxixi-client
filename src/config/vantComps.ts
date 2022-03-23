@@ -31,5 +31,8 @@ export {
   Stepper,
   SubmitBar,
   Cell,
-  CellGroup
+  CellGroup,
+  ActionBar,
+  ActionBarIcon,
+  ActionBarButton
 } from 'vant'

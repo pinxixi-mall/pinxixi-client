@@ -1,4 +1,5 @@
 import http from '@/request'
+import { CartItemAddType, PathIdType } from '@/types'
 
 // 登录
 export const login = (data: any) => http.post({
@@ -37,6 +38,17 @@ export const getGoodsCategoryTree = (data?: any) => http.get({
 })
 
 // 商品详情
-export const getGoodsDetail = (id: number) => http.get({
+export const getGoodsDetail = (id: PathIdType) => http.get({
     url: `/client/goods/detail/${id}`,
+})
+
+// 加入购物车
+export const addCart = (data: CartItemAddType) => http.post({
+    url: `/client/cart`,
+    data
+})
+
+// 购物车列表
+export const getCartList = () => http.get({
+    url: `/client/cart`,
 })

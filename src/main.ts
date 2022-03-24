@@ -11,10 +11,7 @@ const app = createApp(App)
 
 app.use(router).use(createPinia())
 
-for (const key in comps) {
-    if (Object.prototype.hasOwnProperty.call(comps, key)) {
-        app.use(Reflect.get(comps, key))
-    }
-}
+// 注册vant组件
+Object.values(comps).forEach(comp => app.use(comp))
 
 app.mount('#app')

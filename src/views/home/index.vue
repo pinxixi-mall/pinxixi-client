@@ -169,13 +169,13 @@ export default {
             ...toRefs(state),
             searchValue,
             quickNavList,
-            onSearch,
-            onRefresh,
             isRefreshLoading,
             isLastPage,
             isRecommendLoading,
             scrollBox,
             scrollContent,
+            onSearch,
+            onRefresh,
             handleGoodsClick
         }
     }

@@ -1,5 +1,6 @@
 import http from '@/request'
 import { CartItemAddType, CartItemDeleteType, CartItemUpdateType, PathIdType } from '@/types'
+import { OptionsType } from '@/request/types'
 
 // 登录
 export const login = (data: any) => http.post({
@@ -61,6 +62,8 @@ export const deleteCart = (data: CartItemDeleteType) => http.delete({
 })
 
 // 购物车列表
-export const getCartList = () => http.get({
+export const getCartList = (options?: OptionsType) => http.get({
     url: `/client/cart`,
+    data: null,
+    options
 })

@@ -2,7 +2,7 @@
   <!-- 顶部导航 -->
   <van-nav-bar title="商品详情" left-arrow fixed @click-left="onClickBack">
     <template #right>
-      <van-icon name="cart-o" badge="2" size="20" @click="onNavToCart" />
+      <van-icon name="cart-o" :badge="cartStore.cartCount" size="20" @click="onNavToCart" />
     </template>
   </van-nav-bar>
   <!-- 商品信息 -->
@@ -61,6 +61,7 @@ import { GoodsType, PathIdType, CartItemAddType } from '@/types'
 import PxxCard from '@/components/Card/index.vue'
 import { addCart } from '@/api'
 import { Toast } from 'vant'
+import { useCartStore } from '@/stores'
 
 onMounted(() => {
   const route = useRoute()
@@ -90,6 +91,7 @@ const state = reactive<{
   detail: {}
 })
 
+const cartStore = useCartStore()
 // 加入购物车
 const onAddCartClick = async () => {
   const params: CartItemAddType = {
@@ -97,6 +99,7 @@ const onAddCartClick = async () => {
     goodsCount: 1
   }
   await addCart(params)
+  cartStore.updateCartCount()
   Toast.success("商品已添加到购物车")
 }
 

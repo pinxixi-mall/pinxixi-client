@@ -73,6 +73,7 @@ import { PURCHASE_QUANTITY_MIN, PURCHASE_QUANTITY_MAX, PRICE_DECIMAL } from '@/c
 import SubmitBar from '@/components/SubmitBar'
 import { getCartList, updateCart, deleteCart } from '@/api'
 import { CartItemType } from '@/types'
+import { useCartStore } from '@/stores'
 
 interface StateType {
   cartList: CartItemType[];
@@ -93,18 +94,17 @@ export default {
       showTotal: true,
       totalPrice: 0
     })
+    const cartStore = useCartStore()
 
     onMounted(() => {
       getList()
     })
 
     const getList = async () => {
-      const {
-        data: { list }
-      } = await getCartList()
-      state.cartList = list
+      const { data } = await getCartList()
+      state.cartList = data
       // 默认选中全部
-      state.checked = list
+      state.checked = data
     }
 
     // 单条选中

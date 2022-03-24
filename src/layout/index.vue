@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import Tabbar from '@/components/Tabbar/Tabbar.vue'
+import Tabbar from '@/components/Tabbar/index.vue'
 
 export default {
   components: { Tabbar }

@@ -1,19 +1,15 @@
-const files = import.meta.globEager('./modules/*.ts')
+// const files = import.meta.globEager('./modules/*.ts')
 
-interface StoreModuleType {
-  useCartStore: any
-}
+// const modules: any = {}
+// for (const key in files) {
+//   if (Object.prototype.hasOwnProperty.call(files, key)) {
+//     const matchResult: any  = key.match(/.*\/(.*)\.ts/)
+//     modules[matchResult[1]] = files[key].default
+//   }
+// }
 
-const modules: any = {
-  useCartStore: null
-}
-for (const key in files) {
-  if (Object.prototype.hasOwnProperty.call(files, key)) {
-    const reResult: any  = key.match(/.*\/(.*)\.ts/)
-    modules[reResult[1]] = files[key].default
-  }
-}
+import useCartStore from './modules/useCartStore'
 
-export default {
-  useCartStore: 888
+export {
+  useCartStore
 }

@@ -1,16 +1,19 @@
+import { getCartList } from '@/api'
 import { defineStore } from 'pinia'
 
+/**
+ * 购物车
+ */
 export default defineStore({
   id: 'cart',
   state: () => ({
-    cartCount: 0, // 购物车数量
+    cartCount: 0,
   }),
-  getters: {
-    cartCount: (state) => state.cartCount
-  },
+  getters: {},
   actions: {
-    setCartCount(count: number) {
-      this.cartCount = count
-    },
+    async updateCartCount() {
+      const { data } = await getCartList({ noLoading: true })
+      this.cartCount = data.length
+    }
   },
 })

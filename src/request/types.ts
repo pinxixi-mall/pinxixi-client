@@ -1,5 +1,8 @@
-// types.ts
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+
+export interface OptionsType {
+  noLoading?: boolean
+}
 
 export interface RequestInterceptors {
   // 请求拦截
@@ -12,5 +15,6 @@ export interface RequestInterceptors {
 
 // 自定义传入的参数
 export interface RequestConfig extends AxiosRequestConfig {
-  interceptors?: RequestInterceptors
+  interceptors?: RequestInterceptors,
+  options?: OptionsType
 }

@@ -2,24 +2,28 @@ import axios, { AxiosResponse } from 'axios'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import type { RequestConfig, RequestInterceptors } from './types'
 import { getToken, setToken } from '@/utils'
-import { NOT_LOGIN, TOKEN_EXPIRED, TIMEOUT, BASE_URL } from '@/config/constants'
+import { TIMEOUT, BASE_URL } from '@/config/constants'
 import { Toast, Dialog } from 'vant'
 import router from '@/router'
+import { HttpStatusEnum } from '@/config/httpStatusEnum'
 
 class Request {
-    // axios 实例
+    // axios实例
     instance: AxiosInstance
     // 拦截器对象
     interceptorsObj?: RequestInterceptors
+    // loading标识
+    noLoading?: boolean
 
     constructor(config: RequestConfig) {
         this.instance = axios.create(config)
         this.interceptorsObj = config.interceptors
+        this.noLoading = config.options?.noLoading
 
         // 全局请求拦截器
         this.instance.interceptors.request.use(
             (config: AxiosRequestConfig) => {
-                Toast.loading({ forbidClick: true });
+                !this.noLoading && Toast.loading({ forbidClick: true });
                 const token = getToken()
                 if (token) {
                     config.headers && (config.headers.Authorization = `Bearer ${token}`)
@@ -44,22 +48,22 @@ class Request {
             (res: AxiosResponse) => {
                 Toast.clear()
                 const { data } = res
-                if (data && data.code !== 200) {
-                    if (data.code === NOT_LOGIN) {
+                if (data && data.code !== HttpStatusEnum.SUCCESS) {
+                    if (data.code === HttpStatusEnum.UNAUTHORIZED) {
                       setToken('')
                       Dialog.alert({
                         title: '请登录后再操作',
                       }).then(() => {
                         router.replace('/login')
                       })
-                    } else if (data.code === TOKEN_EXPIRED) {
+                    } else if (data.code === HttpStatusEnum.FORBIDDEN) {
                         setToken('')
                         Dialog.alert({
                           title: '登录已失效，请重新登录',
                         }).then(() => {
                           router.replace('/login')
                         })
-                    } else if (data.code === 400) {
+                    } else if (data.code === HttpStatusEnum.BAD_REQUEST) {
                         Toast('请求数据校验不通过')
                     } else {
                         Toast(data.msg || '请求异常')

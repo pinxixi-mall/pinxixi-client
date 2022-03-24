@@ -4,7 +4,7 @@ export const TOKEN_KEY = 'ACCESS_TOKEN_CLIENT'
 export const NOT_LOGIN = 401
 
 // token失效
-export const TOKEN_EXPIRED = 4001
+export const TOKEN_EXPIRED = 403
 
 export const BASE_URL = process.env.NODE_ENV === 'development' ? 'api' : ''
 

@@ -42,8 +42,21 @@ export interface CartItemAddType {
   goodsCount: number;
 }
 
+// 更新购物车
+export interface CartItemUpdateType {
+  cartId: number;
+  goodsCount: number;
+  isDeleted?: boolean;
+}
+
+// 删除购物车
+export interface CartItemDeleteType {
+  cartIds: number[];
+}
+
 // 购物车项
 export interface CartItemType {
+  cartId: number;
   goodsId: number;
   goodsName: string;
   goodsDesc: string;

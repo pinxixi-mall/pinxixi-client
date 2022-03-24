@@ -19,6 +19,7 @@ class Request {
         // 全局请求拦截器
         this.instance.interceptors.request.use(
             (config: AxiosRequestConfig) => {
+                Toast.loading({ forbidClick: true });
                 const token = getToken()
                 if (token) {
                     config.headers && (config.headers.Authorization = `Bearer ${token}`)
@@ -41,21 +42,20 @@ class Request {
         // 全局响应拦截器
         this.instance.interceptors.response.use(
             (res: AxiosResponse) => {
+                Toast.clear()
                 const { data } = res
                 if (data && data.code !== 200) {
                     if (data.code === NOT_LOGIN) {
                       setToken('')
                       Dialog.alert({
-                        title: '提示',
-                        message: '请登录后再操作'
+                        title: '请登录后再操作',
                       }).then(() => {
                         router.replace('/login')
                       })
                     } else if (data.code === TOKEN_EXPIRED) {
                         setToken('')
                         Dialog.alert({
-                          title: '提示',
-                          message: '登录状态已失效，请重新登录'
+                          title: '登录已失效，请重新登录',
                         }).then(() => {
                           router.replace('/login')
                         })
@@ -70,6 +70,7 @@ class Request {
                 return data
             },
             (err: any) => {
+                Toast.clear()
                 const { response } = err
                 let error = {
                     code: -1,
@@ -94,7 +95,7 @@ class Request {
                     error.msg = strMsg.join('；') || '请求参数不合法'
                 }
 
-                // Toast(error.msg)
+                Toast(error.msg)
                 return Promise.reject(error)
             }
         )
@@ -102,17 +103,14 @@ class Request {
 
     request<T>(config: RequestConfig): Promise<T> {
         return new Promise((resolve, reject) => {
-            // 如果我们为单个请求设置拦截器，这里使用单个请求的拦截器
+            // 单个请求的拦截器
             if (config.interceptors?.requestInterceptors) {
                 config = config.interceptors.requestInterceptors(config)
             }
             this.instance
                 .request<any, T>(config)
                 .then(res => {
-                    // 如果我们为单个响应设置拦截器，这里使用单个响应的拦截器
-                    // if (config.interceptors?.responseInterceptors) {
-                    //     res = config.interceptors.responseInterceptors<T>(res)
-                    // }
+                    // 单个请求拦截
                     resolve(res)
                 })
                 .catch((err: any) => {

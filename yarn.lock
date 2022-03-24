@@ -202,7 +202,7 @@
     "@vue/compiler-dom" "3.2.31"
     "@vue/shared" "3.2.31"
 
-"@vue/devtools-api@^6.0.0", "@vue/devtools-api@^6.0.0-beta.11":
+"@vue/devtools-api@^6.0.0", "@vue/devtools-api@^6.0.0-beta.11", "@vue/devtools-api@^6.0.0-beta.18":
   version "6.1.3"
   resolved "https://registry.npmmirror.com/@vue/devtools-api/-/devtools-api-6.1.3.tgz#a44c52e8fa6d22f84db3abdcdd0be5135b7dd7cf"
   integrity sha512-79InfO2xHv+WHIrH1bHXQUiQD/wMls9qBk6WVwGCbdwP7/3zINtvqPNMtmSHXsIKjvUAHc8L0ouOj6ZQQRmcXg==
@@ -900,6 +900,14 @@ pify@^4.0.1:
   resolved "https://registry.npmmirror.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
+pinia@^2.0.0-rc.10:
+  version "2.0.0-rc.10"
+  resolved "https://registry.npmmirror.com/pinia/-/pinia-2.0.0-rc.10.tgz#81e823931897a4cf5c53c113d0c0e63b7bba9973"
+  integrity sha512-WY0KQoHxSBylhGc6aBQKPFfAupYHWpI1QBQKJSyK9btwwMTVQpwCdePgPho+ZoEMl832jb7RwfI5TN1srV5VEA==
+  dependencies:
+    "@vue/devtools-api" "^6.0.0-beta.18"
+    vue-demi "*"
+
 postcss-pxtorem@^6.0.0:
   version "6.0.0"
   resolved "https://registry.npmmirror.com/postcss-pxtorem/-/postcss-pxtorem-6.0.0.tgz#f228a4d05d8a73f0642eabae950e2b19836366d7"
@@ -1324,6 +1332,11 @@ vscode-vue-languageservice@0.29.8:
     vscode-languageserver-textdocument "^1.0.1"
     vscode-pug-languageservice "0.29.8"
     vscode-typescript-languageservice "0.29.8"
+
+vue-demi@*:
+  version "0.12.4"
+  resolved "https://registry.npmmirror.com/vue-demi/-/vue-demi-0.12.4.tgz#420dd17628f95f1bbce1102ad3c51074713a8049"
+  integrity sha512-ztPDkFt0TSUdoq1ZI6oD730vgztBkiByhUW7L1cOTebiSBqSYfSQgnhYakYigBkyAybqCTH7h44yZuDJf2xILQ==
 
 vue-router@^4.0.14:
   version "4.0.14"

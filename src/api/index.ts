@@ -1,5 +1,5 @@
 import http from '@/request'
-import { CartItemAddType, PathIdType } from '@/types'
+import { CartItemAddType, CartItemDeleteType, CartItemUpdateType, PathIdType } from '@/types'
 
 // 登录
 export const login = (data: any) => http.post({
@@ -44,6 +44,18 @@ export const getGoodsDetail = (id: PathIdType) => http.get({
 
 // 加入购物车
 export const addCart = (data: CartItemAddType) => http.post({
+    url: `/client/cart`,
+    data
+})
+
+// 更新购物车
+export const updateCart = (data: CartItemUpdateType) => http.put({
+    url: `/client/cart`,
+    data
+})
+
+// 删除购物车
+export const deleteCart = (data: CartItemDeleteType) => http.delete({
     url: `/client/cart`,
     data
 })

@@ -34,5 +34,6 @@ export {
   CellGroup,
   ActionBar,
   ActionBarIcon,
-  ActionBarButton
+  ActionBarButton,
+  Empty
 } from 'vant'

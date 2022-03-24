@@ -10,6 +10,9 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import aaa from '@/stores'
+const { useCartStore } = aaa
+console.log('------log------', useCartStore)
 
 export default defineComponent({
   setup() {

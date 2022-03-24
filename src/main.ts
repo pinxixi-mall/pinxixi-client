@@ -5,10 +5,11 @@ import * as comps from './config/vantComps'
 import 'vant/lib/index.css'
 import '@/styles/index.less'
 import 'lib-flexible/flexible'
+import { createPinia } from 'pinia'
 
 const app = createApp(App)
 
-app.use(router)
+app.use(router).use(createPinia())
 
 for (const key in comps) {
     if (Object.prototype.hasOwnProperty.call(comps, key)) {

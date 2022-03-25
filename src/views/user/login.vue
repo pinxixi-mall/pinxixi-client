@@ -37,14 +37,14 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, onMounted, toRefs } from 'vue'
+import { ref, reactive, onMounted, toRefs, defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '@/api/index'
 import { setToken } from '@/utils'
 import logo from '@/assets/icons/pxx-logo.png'
 import VerifyCode from '@/components/VerifyCode/index.vue'
 
-export default {
+export default defineComponent({
   components: {
     VerifyCode
   },
@@ -90,7 +90,7 @@ export default {
       checkVerifyCode
     }
   }
-}
+})
 
 </script>
 

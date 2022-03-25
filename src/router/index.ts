@@ -1,3 +1,4 @@
+import { useTabbarStore } from '@/stores'
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
@@ -53,6 +54,13 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+router.beforeEach((to, from) => {
+  // 需要隐藏底部tabbar时在路径传入hide=1
+  const { hide } = to.query
+  const tabbarStore = useTabbarStore()
+  tabbarStore.setTabbarShow(!hide)
 })
 
 export default router

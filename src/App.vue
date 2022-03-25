@@ -1,12 +1,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Loading from './components/Loading/Loading.vue'
 
 export default defineComponent({
   name: 'App',
-  components: {
-    Loading
-  },
 })
 </script>
 <template>

@@ -9,7 +9,9 @@
 // }
 
 import useCartStore from './modules/useCartStore'
+import useTabbarStore from './modules/useTabbarStore'
 
 export {
-  useCartStore
+  useCartStore,
+  useTabbarStore
 }

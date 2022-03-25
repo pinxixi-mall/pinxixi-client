@@ -66,7 +66,7 @@ const drawText = (): void => {
     const letter = TEXTS[textIdx]
     ctx.textBaseline = 'alphabetic'
     ctx.font = `${fontSize}px Simhei`
-    ctx.fillStyle = randomColor(60, 150)
+    ctx.fillStyle = randomColor(60, 100)
     ctx.save()
     ctx.translate(10 + index * 26, y)
     ctx.rotate(deg * Math.PI / 180)

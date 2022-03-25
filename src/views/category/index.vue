@@ -28,14 +28,14 @@
 
 <script lang="ts">
 import { getGoodsCategoryTree } from '@/api'
-import { onMounted, ref, reactive, toRefs } from 'vue'
+import { onMounted, ref, reactive, toRefs, defineComponent } from 'vue'
 
 interface StateType {
   leftList: any[];
   rightList: any[];
 }
 
-export default {
+export default defineComponent({
   setup() {
     const searchValue = ref()
     const levelOne = ref()
@@ -80,7 +80,7 @@ export default {
       onLevelOneChange
     }
   }
-}
+})
 </script>
 
 <style lang="less">

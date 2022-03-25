@@ -80,7 +80,7 @@ const onClickBack = () => {
   router.go(-1)
 }
 const onNavToCart = () => {
-  router.push('/cart')
+  router.push({path: '/cart', query: { hide: 1 }})
 }
 
 const state = reactive<{

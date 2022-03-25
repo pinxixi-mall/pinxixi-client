@@ -6,18 +6,27 @@
       </keep-alive>
     </router-view>
   </div>
-  <Tabbar />
+  <Tabbar v-show="tabbarStore.show" />
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue'
 import Tabbar from '@/components/Tabbar/index.vue'
+import { useTabbarStore } from '@/stores'
 
-export default {
-  components: { Tabbar }
-}
+export default defineComponent({
+  components: { Tabbar },
+  setup() {
+    const tabbarStore = useTabbarStore()
+    
+    return {
+      tabbarStore
+    }
+  }
+})
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .main {
   width: 100vw;
   height: calc(100vh - 50px);

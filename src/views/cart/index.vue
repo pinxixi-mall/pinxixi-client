@@ -1,6 +1,6 @@
 <template>
   <!-- 顶部菜单 -->
-  <van-nav-bar title="购物车" fixed>
+  <van-nav-bar title="购物车" fixed :left-arrow="!tabbarStore.show" @click-left="$router.go(-1)">
     <template #right v-if="cartList.length">
       <span @click="onClickRight">{{ rightBtnText }}</span>
     </template>
@@ -68,12 +68,12 @@
 
 <script lang="ts">
 import { CheckboxGroupInstance, Toast, Dialog } from 'vant'
-import { computed, onMounted, reactive, ref, toRefs, watch } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { PURCHASE_QUANTITY_MIN, PURCHASE_QUANTITY_MAX, PRICE_DECIMAL } from '@/config/constants'
 import SubmitBar from '@/components/SubmitBar'
 import { getCartList, updateCart, deleteCart } from '@/api'
 import { CartItemType } from '@/types'
-import { useCartStore } from '@/stores'
+import { useTabbarStore } from '@/stores'
 
 interface StateType {
   cartList: CartItemType[];
@@ -83,7 +83,7 @@ interface StateType {
   totalPrice: number;
 }
 
-export default {
+export default defineComponent({
   components: { SubmitBar },
   setup() {
     const checkboxGroup = ref<CheckboxGroupInstance>()
@@ -94,11 +94,15 @@ export default {
       showTotal: true,
       totalPrice: 0
     })
-    const cartStore = useCartStore()
+    const tabbarStore = useTabbarStore()
 
     onMounted(() => {
       getList()
     })
+
+    const wrapperBottom = computed(() => tabbarStore.show ? '50px' : 0)
+
+    const submitBottom = computed(() => tabbarStore.show ? '50px' : 0)
 
     const getList = async () => {
       const { data } = await getCartList()
@@ -187,6 +191,9 @@ export default {
       PURCHASE_QUANTITY_MAX,
       PRICE_DECIMAL,
       rightBtnText,
+      wrapperBottom,
+      submitBottom,
+      tabbarStore,
       onSubmit,
       onCheckedAll,
       onCountChange,
@@ -195,13 +202,14 @@ export default {
       onBeforeCountChange
     }
   }
-}
+})
 </script>
 
 <style lang="less" scoped>
 .goods-wrapper {
   // height: 100vh;
-  padding: 46px 16px 90px;
+  padding: 46px 16px 0;
+  padding-bottom: v-bind(wrapperBottom);
   box-sizing: border-box;
   background-color: var(--pxx-page-background);
   .goods-item {
@@ -264,7 +272,7 @@ export default {
 }
 
 .submit-bar {
-  bottom: 50px;
+  bottom: v-bind(submitBottom);
   &-delete {
     padding: 0 12px;
   }

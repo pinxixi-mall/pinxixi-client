@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, onMounted, toRefs, computed } from 'vue'
+import { ref, reactive, onMounted, toRefs, computed, defineComponent } from 'vue'
 import { getHomeCarousel, getRecommendList } from '@/api'
 import { quickNavList } from '@/mock'
 import { RecommendType, PageType } from '@/types'
@@ -77,7 +77,7 @@ interface HomeStateType {
     recommendPage: PageType;
 }
 
-export default {
+export default defineComponent({
     components: { BottomLoading, Waterfall, WaterfallItem },
     setup() {
         const router = useRouter()
@@ -179,7 +179,7 @@ export default {
             handleGoodsClick
         }
     }
-}
+})
 </script>
 
 <style lang="less" scoped>

@@ -1,5 +1,5 @@
 <template>
-    <van-nav-bar title="订单详情" left-arrow fixed placeholder @click-left="$router.go(-1)"></van-nav-bar>
+    <van-nav-bar title="订单详情" left-arrow fixed placeholder @click-left="$router.go(-1)" />
     <section class="order-status">
         <div class="left">
             <p class="status">待支付</p>
@@ -38,7 +38,6 @@
     <van-cell-group inset class="order-cost">
         <van-cell title="商品金额" value="￥1999.00" />
         <van-cell title="运费" value="￥0.00" />
-        <van-cell title="优惠券" value="无可用" is-link />
         <div class="total">
             <span class="label">合计：</span>
             <span class="value price">13666</span>
@@ -86,6 +85,7 @@ import { CartItemType } from "@/types";
 import { defineComponent, reactive, ref, toRefs } from "vue"
 import GoodsCard from '@/components/GoodsCard/index.vue'
 import Card from '@/components/Card/index.vue'
+import { useRouter } from "vue-router"
 
 export default defineComponent({
     components: { GoodsCard, Card },
@@ -102,8 +102,11 @@ export default defineComponent({
         const remainTime = ref(15 * 60 * 60 * 1000)
         const paymentWay = ref<string>()
 
+        const router = useRouter()
         const onSubmit = () => {
-
+            router.push({
+                path: '/order/payment'
+            })
         }
 
         return {
@@ -141,7 +144,7 @@ export default defineComponent({
         }
     }
     .icon {
-        font-size: 50px;
+        font-size: 42px;
     }
 }
 .order-address {

@@ -88,6 +88,14 @@ const routes: Array<RouteRecordRaw> = [
       title: '订单详情',
     },
     component: () => import('@/views/order/detail.vue')
+  },
+  {
+    path: '/order/payment',
+    name: '/order/payment',
+    meta: {
+      title: '支付结果',
+    },
+    component: () => import('@/views/order/payment.vue')
   }
 ]
 

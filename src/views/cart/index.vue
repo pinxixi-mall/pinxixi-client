@@ -172,6 +172,8 @@ export default defineComponent({
         Toast('您还没有选择商品哦')
         return
       }
+      console.log(state.checked);
+      return
       router.push({
         path: '/order/confirm'
       })

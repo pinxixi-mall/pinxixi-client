@@ -18,9 +18,9 @@ export default defineComponent({
 
 <style scoped lang="less">
 .pxx-card{
-  padding: 14px;
+  padding: 12px;
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: var(--van-border-radius-lg);
 }
 
 </style>

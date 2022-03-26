@@ -17,6 +17,7 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores'
+import { getToken } from '@/utils'
 
 export default defineComponent({
   setup() {
@@ -26,7 +27,7 @@ export default defineComponent({
 
     onMounted(() => {
       active.value = router.currentRoute.value.fullPath
-      carStore.updateCartCount()
+      getToken() && carStore.updateCartCount()
     })
 
     return {

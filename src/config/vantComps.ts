@@ -35,5 +35,12 @@ export {
   ActionBar,
   ActionBarIcon,
   ActionBarButton,
-  Empty
+  Empty,
+  ContactCard,
+  CouponCell,
+  CouponList,
+  Popup,
+  Radio,
+  RadioGroup,
+  CountDown
 } from 'vant'

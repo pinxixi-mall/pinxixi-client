@@ -1,6 +1,6 @@
 <template>
   <!-- 顶部菜单 -->
-  <van-nav-bar title="购物车" fixed :left-arrow="!tabbarStore.show" @click-left="$router.go(-1)">
+  <van-nav-bar title="购物车" fixed placeholder :left-arrow="!tabbarStore.show" @click-left="$router.go(-1)">
     <template #right v-if="cartList.length">
       <span @click="onClickRight">{{ rightBtnText }}</span>
     </template>
@@ -15,17 +15,8 @@
         :name="item"
         :label-disabled="true"
       >
-        <van-card
-          :price="item.goodsPrice.toFixed(PRICE_DECIMAL)"
-          :thumb="item.goodsImage"
-        >
-          <template #title>
-            <p class="van-multi-ellipsis--l2 name">{{ item.goodsName }}</p>
-          </template>
-          <template #desc>
-            <p class="van-multi-ellipsis--l2 desc">{{ item.goodsDesc }}</p>
-          </template>
-          <template #num>
+        <goods-card :goods="item">
+          <template #stepper>
             <van-stepper
               class="stepper"
               v-model="item.goodsCount"
@@ -36,7 +27,7 @@
               @overlimit="onCountChange"
             />
           </template>
-        </van-card>
+        </goods-card>
       </van-checkbox>
     </van-checkbox-group>
     <!-- 提交 -->
@@ -59,8 +50,8 @@
   <van-empty
     v-else
     class="empty"
-    image="https://img.yzcdn.cn/vant/custom-empty-image.png"
-    description="购物车为空"
+    :image="iconEmptyCart"
+    description="购物车还没有商品哦"
   >
     <van-button class="empty-btn" type="primary" plain round>去逛逛</van-button>
   </van-empty>
@@ -74,17 +65,19 @@ import SubmitBar from '@/components/SubmitBar'
 import { getCartList, updateCart, deleteCart } from '@/api'
 import { CartItemType } from '@/types'
 import { useTabbarStore } from '@/stores'
+import iconEmptyCart from '@/assets/icons/empty_cart.png'
+import GoodsCard from '@/components/GoodsCard/index.vue'
+import { useRouter } from 'vue-router'
 
 interface StateType {
   cartList: CartItemType[];
   checked: any[];
   checkedAll: boolean;
   showTotal: boolean;
-  totalPrice: number;
 }
 
 export default defineComponent({
-  components: { SubmitBar },
+  components: { SubmitBar, GoodsCard },
   setup() {
     const checkboxGroup = ref<CheckboxGroupInstance>()
     const state = reactive<StateType>({
@@ -92,17 +85,16 @@ export default defineComponent({
       checked: [],
       checkedAll: false,
       showTotal: true,
-      totalPrice: 0
     })
+    const router = useRouter()
+
     const tabbarStore = useTabbarStore()
+    const wrapperBottom = computed(() => tabbarStore.show ? '60px' : '10px')
+    const submitBottom = computed(() => tabbarStore.show ? '50px' : 0)
 
     onMounted(() => {
       getList()
     })
-
-    const wrapperBottom = computed(() => tabbarStore.show ? '50px' : 0)
-
-    const submitBottom = computed(() => tabbarStore.show ? '50px' : 0)
 
     const getList = async () => {
       const { data } = await getCartList()
@@ -116,7 +108,6 @@ export default defineComponent({
       () => state.checked,
       () => {
         state.checkedAll = state.checked.length === state.cartList.length
-        calcTotalPrice()
       }
     )
 
@@ -134,11 +125,10 @@ export default defineComponent({
       Toast(tips[value])
     }
 
-    // 计算总金额(vant单位是分)
-    const calcTotalPrice = () => {
-      state.totalPrice =
-        state.checked.reduce((ret: any, it: any) => ret + it.goodsPrice * it.goodsCount, 0) * 100
-    }
+    // 总金额(vant单位是分)
+    const totalPrice = computed(() => {
+      return state.checked.reduce((ret: any, it: any) => ret + it.goodsPrice * it.goodsCount, 0) * 100
+    })
 
     // 编辑
     const rightBtnText = computed(() => {
@@ -182,6 +172,9 @@ export default defineComponent({
         Toast('您还没有选择商品哦')
         return
       }
+      router.push({
+        path: '/order/confirm'
+      })
     }
 
     return {
@@ -194,6 +187,8 @@ export default defineComponent({
       wrapperBottom,
       submitBottom,
       tabbarStore,
+      iconEmptyCart,
+      totalPrice,
       onSubmit,
       onCheckedAll,
       onCountChange,
@@ -207,8 +202,8 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .goods-wrapper {
-  // height: 100vh;
-  padding: 46px 16px 0;
+  min-height: 100vh;
+  padding: 0 16px;
   padding-bottom: v-bind(wrapperBottom);
   box-sizing: border-box;
   background-color: var(--pxx-page-background);
@@ -218,55 +213,12 @@ export default defineComponent({
     border-radius: 8px;
     box-shadow: 0 0 12px #ebedf0;
     background: #fff;
-    .name{
-      line-height: 16px;
-    }
-
-    .desc {
-      line-height: 16px;
-      font-size: 12px;
-      color: var(--van-gray-6);
-      margin-top: 2px;
+    :deep(.van-card) {
+      padding: 0 0 0 4px;
     }
 
     :deep(.van-checkbox__label) {
       flex: 1;
-      .van-card {
-        padding: 0 0 0 4px;
-        background-color: #fff;
-        .van-card__bottom {
-          margin-top: 16px;
-          .van-card__price {
-            color: var(--van-primary-color);
-            line-height: 30px;
-          }
-          .van-card__num {
-            line-height: 1;
-            .stepper {
-              border: 1px solid var(--van-gray-3);
-              border-radius: 40px;
-              overflow: hidden;
-              .van-stepper__minus,
-              .van-stepper__plus {
-                width: 26px;
-                height: 26px;
-                &::before {
-                  width: 40%;
-                }
-                &::after {
-                  height: 40%;
-                }
-              }
-              .van-stepper__input {
-                height: 26px;
-                margin: 0;
-                border-left: 1px solid var(--van-gray-3);
-                border-right: 1px solid var(--van-gray-3);
-              }
-            }
-          }
-        }
-      }
     }
   }
 }
@@ -281,7 +233,7 @@ export default defineComponent({
 .empty {
   margin: 50px 0;
   :deep(.van-empty__image) {
-    width: 90px;
+    width: 100px;
     height: 90px;
   }
   .empty-btn {

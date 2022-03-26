@@ -15,5 +15,8 @@ body, p, h1, h2, h3, h4 {
   margin: 0;
   padding: 0;
 }
+body{
+  background-color: var(--pxx-page-background);
+}
 
 </style>

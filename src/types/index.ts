@@ -30,7 +30,7 @@ export interface GoodsType {
   goodsImage: string;
   goodsPrice: number;
   goodsDesc: string;
-  goodsDetail: string;
+  goodsDetail?: string;
 }
 
 // 路径参数id

@@ -1,8 +1,8 @@
 <template>
   <!-- 顶部导航 -->
-  <van-nav-bar title="商品详情" left-arrow fixed @click-left="onClickBack">
+  <van-nav-bar title="商品详情" left-arrow fixed placeholder @click-left="onClickBack">
     <template #right>
-      <van-icon name="cart-o" :badge="cartStore.cartCount" size="20" @click="onNavToCart" />
+      <van-icon name="cart-o" :show-zero="false" :badge="cartStore.cartCount" size="20" @click="onNavToCart" />
     </template>
   </van-nav-bar>
   <!-- 商品信息 -->
@@ -113,7 +113,7 @@ const { detail } = toRefs(state)
   height: 100vh;
   overflow-y: auto;
   background-color: var(--pxx-page-background);
-  padding: 46px 0 50px;
+  padding: 0 0 50px;
   box-sizing: border-box;
   .goods-image {
     > img {
@@ -134,11 +134,12 @@ const { detail } = toRefs(state)
         font-size: 28px;
       }
       .share {
-        height: 40px;
+        height: 34px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
+        color: var(--van-gray-7);
         .text {
           font-size: 10px;
         }

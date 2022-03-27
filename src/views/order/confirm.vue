@@ -2,7 +2,7 @@
     <van-nav-bar title="确认订单" left-arrow fixed placeholder @click-left="$router.go(-1)"></van-nav-bar>
     <!-- 地址 -->
     <section class="order-address">
-        <van-cell title="单元格" is-link icon="location-o">
+        <van-cell title="单元格" is-link icon="location-o" to="/mine/address">
             <template #title>
                 <p>广东省深圳市南山区粤海街道 深圳湾1号</p>
             </template>
@@ -26,12 +26,12 @@
     </Card>
     <!-- 订单总计 -->
     <van-cell-group inset class="order-cost">
-        <van-cell title="商品金额" value="￥1999.00" />
+        <van-cell title="商品金额" :value="goodsPrice" />
         <van-cell title="运费" value="￥0.00" />
         <van-coupon-cell :coupons="coupons" :chosen-coupon="chosenCoupon" @click="showList = true" />
         <div class="total">
             <span class="label">合计：</span>
-            <span class="value price">13666</span>
+            <span class="value price">{{totalPrice}}</span>
         </div>
     </van-cell-group>
     <!-- 备注 -->
@@ -40,7 +40,7 @@
     </van-cell-group>
     <!-- 提交 -->
     <van-submit-bar
-        :price="3050"
+        :price="Number(totalPrice) * 100"
         label=" "
         button-text="提交订单"
         text-align="left"
@@ -54,37 +54,63 @@
         v-model:show="showList"
         round
         position="bottom"
-        style="height: 60%; padding-top: 4px;"
+        style="height: 70%; padding-top: 4px;"
     >
         <van-coupon-list
+            :show-exchange-bar="false"
             :coupons="coupons"
             :chosen-coupon="chosenCoupon"
-            :disabled-coupons="disabledCoupons"
             @change="onChange"
-            @exchange="onExchange"
         />
     </van-popup>
 </template>
 
 <script lang="ts">
 import { CartItemType } from "@/types";
-import { defineComponent, reactive, ref, toRefs } from "vue"
+import { computed, defineComponent, onMounted, reactive, ref, toRefs } from "vue"
 import GoodsCard from '@/components/GoodsCard/index.vue'
 import Card from '@/components/Card/index.vue'
-import { useRouter } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
+import { PRICE_DECIMAL } from "@/config/constants"
+import { getCartListByIds } from '@/api'
 
 export default defineComponent({
     components: { GoodsCard, Card },
     setup() {
         const state = reactive<{
-            goodsList: CartItemType[]
+            goodsList: CartItemType[],
         }>({
             goodsList: [
                 { cartId: 2, goodsId: 1, goodsName: 'sfsdf', goodsCount: 1, goodsImage: 'https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg', goodsDesc: 'sdfdsf', goodsPrice: 16 },
                 { cartId: 2, goodsId: 1, goodsName: 'sfsdf', goodsCount: 1, goodsImage: 'https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg', goodsDesc: 'sdfdsf', goodsPrice: 16 }
-            ]
+            ],
         })
         const router = useRouter()
+        const route = useRoute()
+        let cartIds: string
+
+        onMounted(() => {
+            const { ids } = route.query
+            if (ids) {
+                cartIds = ids.toString() //.toString().split(',').map(id => parseInt(id))
+                getGoods()
+            }
+        })
+
+        const getGoods = async () => {
+            console.log(cartIds);
+            
+            const { data } = await getCartListByIds({ cartIds })
+            state.goodsList = data
+        }
+
+        // 商品金额
+        const goodsPrice = computed(() => state.goodsList.reduce((ret, it) => ret + it.goodsCount * it.goodsPrice, 0).toFixed(PRICE_DECIMAL))
+        // 总金额
+        const totalPrice = computed(() => {
+            const coupon = chosenCoupon.value > -1 ? coupons.value[chosenCoupon.value].value : 0
+            return (Number(goodsPrice.value) - coupon / 100).toFixed(PRICE_DECIMAL)
+        })
 
         // 确认提交
         const onConfirm = () => {
@@ -92,9 +118,6 @@ export default defineComponent({
                 path: '/order/detail'
             })
         }
-
-        // 支付方式
-        const paymentWay = ref<string>()
 
         /**
          * 优惠券
@@ -110,15 +133,11 @@ export default defineComponent({
             unitDesc: '元',
         }
         const coupons = ref<any[]>([coupon])
-        const disabledCoupons = ref<any[]>([coupon])
         const showList = ref(false)
         const chosenCoupon = ref(-1)
         const onChange = (index: number) => {
-            showList.value = false;
-            chosenCoupon.value = index;
-        }
-        const onExchange = (code: number) => {
-            coupons.value.push(coupon);
+            showList.value = false
+            chosenCoupon.value = index
         }
 
         return {
@@ -126,10 +145,9 @@ export default defineComponent({
             coupons,
             showList,
             chosenCoupon,
-            disabledCoupons,
-            paymentWay,
+            goodsPrice,
+            totalPrice,
             onChange,
-            onExchange,
             onConfirm
         }
     },

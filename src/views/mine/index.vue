@@ -16,27 +16,51 @@
         <ul class="list">
             <li v-for="item in list" :key="item.value">
                 <p class="value">{{ item.value }}</p>
-                <p class="label">{{ item.label }}</p>
+                <p class="label">
+                    <van-icon class="icon" :name="item.icon" />
+                    <span>{{ item.label }}</span>
+                </p>
             </li>
         </ul>
     </section>
+    <van-cell-group inset class="my-order card">
+        <van-cell title="我的订单" value="全部订单" is-link @click="navToOrderList(1)" />
+        <van-grid :border="false">
+            <van-grid-item icon="pending-payment" text="待付款" />
+            <van-grid-item icon="send-gift-o" text="待收货" />
+            <van-grid-item icon="comment-o" text="待评价" />
+            <van-grid-item icon="after-sale" text="退款/售后" />
+        </van-grid>
+    </van-cell-group>
+    <van-cell-group inset class="address card">
+        <van-cell title="地址管理" to="/mine/address" is-link />
+    </van-cell-group>
+    <van-cell-group inset class="account card">
+        <van-cell title="账号管理" to="/mine/account" is-link />
+    </van-cell-group>
+    <van-button class="logout-btn" round block>退出登录</van-button>
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
     name: "demo",
     setup() {
         const list = ref([
-            { label: '收藏夹', value: 16 },
-            { label: '足迹', value: 61 },
-            { label: '红包卡券', value: 6 },
-            { label: '积分', value: 366 },
+            { label: '商品收藏', value: 16, icon: 'star-o' },
+            { label: '红包卡券', value: 6, icon: 'cash-on-deliver' },
+            { label: '浏览记录', value: 61, icon: 'clock-o' },
         ])
+        const router = useRouter()
 
+        const navToOrderList = (status: number) => {
+            router.push(`/order/list/${status}`)
+        }
 
         return {
-            list
+            list,
+            navToOrderList
         }
     },
 })
@@ -44,40 +68,59 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .user-card {
-    padding: 20px;
-    background: var(--van-gradient-red);
+    padding: 20px 20px 60px;
+    background: linear-gradient(to top, #ff6034, #ee0a24);
     .info {
         display: flex;
-        color: #fff;
+        color: var(--van-gray-1);
+        align-items: center;
         .avatar {
             margin-right: 16px;
         }
         .name {
             font-size: 18px;
-            color: var(--van-gray-8);
             margin-bottom: 8px;
         }
-        .phone{
-            color: #333;
+        .phone {
+            color: var(--van-gray-3);
+            font-size: 14px;
         }
     }
-    .list{
-        width: 100%;
+    .list {
         display: flex;
         justify-content: space-around;
-        margin-top: 20px;
-        li{
-            width: 25%;
+        margin-top: 24px;
+        li {
             flex: 1;
             text-align: center;
-            .value{
-                color: #eee;
-                margin-bottom: 10px;
+            .value {
+                color: var(--van-gray-1);
+                font-size: 16px;
+                margin-bottom: 8px;
             }
-            .label{
-                color: #333;
+            .label {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: var(--van-gray-3);
+            }
+            .icon {
+                font-size: 16px;
+                margin-right: 4px;
             }
         }
     }
+}
+
+.card{
+    margin: 16px;
+}
+.my-order{
+    margin-top: -30px;
+}
+
+.logout-btn{
+    width: 90%;
+    margin: 30px auto;
 }
 </style>

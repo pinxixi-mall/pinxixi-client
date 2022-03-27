@@ -86,7 +86,7 @@ export default defineComponent({
             recommendList: [],
             recommendPage: {
                 pageNum: 1,
-                pageSize: 2,
+                pageSize: 10,
                 total: 0
             }
         })

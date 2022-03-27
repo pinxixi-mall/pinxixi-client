@@ -11,7 +11,11 @@ export default defineStore({
   }),
   getters: {},
   actions: {
-    async updateCartCount() {
+    async updateCartCount(count?: number) {
+      if (count && !isNaN(count)) {
+        this.cartCount = count
+        return
+      }
       const { data } = await getCartList({ noLoading: true })
       this.cartCount = data.length
     }

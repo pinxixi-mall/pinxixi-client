@@ -99,17 +99,18 @@ export default defineComponent({
   .content {
     position: absolute;
     top: 0;
-    left: 90px;
+    left: 80px;
     right: 0;
     bottom: 0;
     overflow-y: auto;
     padding: 0 0 40px;
+    background-color: #fff;
     .level-2 {
       padding: 10px 0;
       .title{
         font-size: 14px;
         color: #333;
-        padding: 10px 0;
+        padding: 10px 10px;
       }
     }
   }

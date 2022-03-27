@@ -96,6 +96,38 @@ const routes: Array<RouteRecordRaw> = [
       title: '支付结果',
     },
     component: () => import('@/views/order/payment.vue')
+  },
+  {
+    path: '/order/list/:status',
+    name: '/order/list',
+    meta: {
+      title: '我的订单',
+    },
+    component: () => import('@/views/order/list.vue')
+  },
+  {
+    path: '/mine/address',
+    name: '/mine/address',
+    meta: {
+      title: '地址管理',
+    },
+    component: () => import('@/views/mine/address.vue')
+  },
+  {
+    path: '/mine/address-edit',
+    name: '/mine/address-edit',
+    meta: {
+      title: '地址编辑',
+    },
+    component: () => import('@/views/mine/address-edit.vue')
+  },
+  {
+    path: '/mine/account',
+    name: '/mine/account',
+    meta: {
+      title: '账号管理',
+    },
+    component: () => import('@/views/mine/account.vue')
   }
 ]
 

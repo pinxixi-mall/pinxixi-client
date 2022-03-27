@@ -76,6 +76,9 @@ const { goods } = props
                     }
                 }
             }
+            .count {
+                line-height: 30px;
+            }
         }
     }
 }

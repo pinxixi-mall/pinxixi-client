@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vant/area-data": "^1.2.3",
     "axios": "^0.26.1",
     "js-cookie": "^3.0.1",
     "less": "^4.1.2",

@@ -61,9 +61,16 @@ export const deleteCart = (data: CartItemDeleteType) => http.delete({
     data
 })
 
-// 购物车列表
+// 按用户查询购物车列表
 export const getCartList = (options?: OptionsType) => http.get({
     url: `/client/cart`,
     data: null,
+    options
+})
+
+// 按ids查询购物车列表
+export const getCartListByIds = (ids: Record<string, string>, options?: OptionsType) => http.get({
+    url: `/client/cart/select`,
+    params: ids,
     options
 })

@@ -48,7 +48,7 @@
     <van-action-bar-icon icon="shop-o" text="店铺" />
     <van-action-bar-icon icon="chat-o" text="客服" dot />
     <van-action-bar-icon icon="like-o" text="收藏" color="#ff5000" />
-    <van-action-bar-button type="warning" text="加入购物车" @click="onAddCartClick" />
+    <van-action-bar-button type="warning" text="加入购物车" @click="() => onAddCartClick()" />
     <van-action-bar-button type="danger" text="立即购买" @click="onBuytClick" />
   </van-action-bar>
 </template>
@@ -67,6 +67,7 @@ onMounted(() => {
   const route = useRoute()
   state.goodsId = route.params.id
   getDetail()
+  cartStore.updateCartCount()
 })
 
 // 获取详情
@@ -85,7 +86,7 @@ const onNavToCart = () => {
 
 const state = reactive<{
   goodsId: PathIdType
-  detail: GoodsType | object
+  detail: GoodsType | any
 }>({
   goodsId: '',
   detail: {}
@@ -93,14 +94,23 @@ const state = reactive<{
 
 const cartStore = useCartStore()
 // 加入购物车
-const onAddCartClick = async () => {
+const onAddCartClick = async (isBuy?: boolean) => {
   const params: CartItemAddType = {
     goodsId: Number(state.goodsId),
     goodsCount: 1
   }
   await addCart(params)
   cartStore.updateCartCount()
-  Toast.success("商品已添加到购物车")
+  if (isBuy) {
+    onNavToCart()
+  } else {
+    Toast.success("商品已添加到购物车")
+  }
+}
+
+// 立即购买
+const onBuytClick = () => {
+  onAddCartClick(true)
 }
 
 const { detail } = toRefs(state)

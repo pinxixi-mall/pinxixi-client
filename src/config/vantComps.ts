@@ -42,5 +42,10 @@ export {
   Popup,
   Radio,
   RadioGroup,
-  CountDown
+  CountDown,
+  List,
+  Tabs,
+  Tab,
+  AddressList,
+  AddressEdit,
 } from 'vant'

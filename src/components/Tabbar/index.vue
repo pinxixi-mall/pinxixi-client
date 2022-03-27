@@ -16,7 +16,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useCartStore } from '@/stores'
+import { useCartStore, useTabbarStore } from '@/stores'
 import { getToken } from '@/utils'
 
 export default defineComponent({
@@ -24,10 +24,11 @@ export default defineComponent({
     const active = ref()
     const router = useRouter()
     const carStore = useCartStore()
+    const tabbarStore = useTabbarStore()
 
     onMounted(() => {
       active.value = router.currentRoute.value.fullPath
-      getToken() && carStore.updateCartCount()
+      getToken() && tabbarStore.show && carStore.updateCartCount()
     })
 
     return {

@@ -50,10 +50,12 @@
   <van-empty
     v-else
     class="empty"
-    :image="iconEmptyCart"
     description="购物车还没有商品哦"
   >
-    <van-button class="empty-btn" type="primary" plain round>去逛逛</van-button>
+    <template #image>
+      <van-icon name="shopping-cart-o" style="color: var(--van-gray-6);font-size: 80px;"/>
+    </template>
+    <van-button class="empty-btn" type="primary" plain round to="/home">去逛逛</van-button>
   </van-empty>
 </template>
 
@@ -64,8 +66,7 @@ import { PURCHASE_QUANTITY_MIN, PURCHASE_QUANTITY_MAX, PRICE_DECIMAL } from '@/c
 import SubmitBar from '@/components/SubmitBar'
 import { getCartList, updateCart, deleteCart } from '@/api'
 import { CartItemType } from '@/types'
-import { useTabbarStore } from '@/stores'
-import iconEmptyCart from '@/assets/icons/empty_cart.png'
+import { useCartStore, useTabbarStore } from '@/stores'
 import GoodsCard from '@/components/GoodsCard/index.vue'
 import { useRouter } from 'vue-router'
 
@@ -147,6 +148,7 @@ export default defineComponent({
     }
 
     // 删除
+    const cartStore = useCartStore()
     const onDeleteCart = () => {
       Dialog.confirm({
         title: `确认要删除这${state.checked.length}种商品吗？`,
@@ -155,6 +157,8 @@ export default defineComponent({
             if (action === 'confirm') {
               try {
                 await deleteCart({ cartIds: state.checked.map(it => it.cartId) })
+                await getList()
+                cartStore.updateCartCount(state.cartList.length)
                 resolve(true)
               } catch (error) {
                 resolve(false)
@@ -172,10 +176,11 @@ export default defineComponent({
         Toast('您还没有选择商品哦')
         return
       }
-      console.log(state.checked);
-      return
       router.push({
-        path: '/order/confirm'
+        path: '/order/confirm',
+        query: {
+          ids: state.checked.map(it => it.cartId).toString()
+        }
       })
     }
 
@@ -189,7 +194,6 @@ export default defineComponent({
       wrapperBottom,
       submitBottom,
       tabbarStore,
-      iconEmptyCart,
       totalPrice,
       onSubmit,
       onCheckedAll,
@@ -233,14 +237,17 @@ export default defineComponent({
 }
 
 .empty {
-  margin: 50px 0;
-  :deep(.van-empty__image) {
-    width: 100px;
-    height: 90px;
+  display: flex;
+  margin: 40px auto;
+  :deep(.van-empty__image){
+    width: 80px;
+    height: 80px;
+    text-align: center;
   }
   .empty-btn {
     height: 40px;
     padding: 0 40px;
+    margin-top: 20px;
   }
 }
 </style>

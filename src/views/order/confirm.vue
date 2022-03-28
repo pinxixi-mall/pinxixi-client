@@ -107,17 +107,17 @@ export default defineComponent({
         // 商品金额
         const goodsPrice = computed(() => state.goodsList.reduce((ret, it) => ret + it.goodsCount * it.goodsPrice, 0).toFixed(PRICE_DECIMAL))
         // 优惠金额
-        const couponValue = computed(() => chosenCoupon.value > -1 ? coupons.value[chosenCoupon.value].value : 0)
+        const couponValue = computed(() => chosenCoupon.value > -1 ? coupons.value[chosenCoupon.value].value / 100 : 0)
         // 总金额
         const totalPrice = computed(() => {
-            return (Number(goodsPrice.value) - couponValue.value / 100).toFixed(PRICE_DECIMAL)
+            return (Number(goodsPrice.value) - couponValue.value).toFixed(PRICE_DECIMAL)
         })
 
         // 确认提交
         const onConfirm = async () => {
             await createOrder({
                 cartIds: state.goodsList.map(it => it.cartId),
-                coupon: couponValue.value
+                orderCoupon: couponValue.value
             })
             router.push({
                 path: '/order/detail'

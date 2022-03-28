@@ -68,5 +68,5 @@ export interface CartItemType {
 // 订单生成参数
 export interface OrderCreateType {
   cartIds: number[];
-  coupon: number;
+  orderCoupon: number;
 }

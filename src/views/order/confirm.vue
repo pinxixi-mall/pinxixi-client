@@ -72,7 +72,7 @@ import GoodsCard from '@/components/GoodsCard/index.vue'
 import Card from '@/components/Card/index.vue'
 import { useRoute, useRouter } from "vue-router"
 import { PRICE_DECIMAL } from "@/config/constants"
-import { getCartListByIds } from '@/api'
+import { getCartListByIds, createOrder } from '@/api'
 
 export default defineComponent({
     components: { GoodsCard, Card },
@@ -106,14 +106,19 @@ export default defineComponent({
 
         // 商品金额
         const goodsPrice = computed(() => state.goodsList.reduce((ret, it) => ret + it.goodsCount * it.goodsPrice, 0).toFixed(PRICE_DECIMAL))
+        // 优惠金额
+        const couponValue = computed(() => chosenCoupon.value > -1 ? coupons.value[chosenCoupon.value].value : 0)
         // 总金额
         const totalPrice = computed(() => {
-            const coupon = chosenCoupon.value > -1 ? coupons.value[chosenCoupon.value].value : 0
-            return (Number(goodsPrice.value) - coupon / 100).toFixed(PRICE_DECIMAL)
+            return (Number(goodsPrice.value) - couponValue.value / 100).toFixed(PRICE_DECIMAL)
         })
 
         // 确认提交
-        const onConfirm = () => {
+        const onConfirm = async () => {
+            await createOrder({
+                cartIds: state.goodsList.map(it => it.cartId),
+                coupon: couponValue.value
+            })
             router.push({
                 path: '/order/detail'
             })

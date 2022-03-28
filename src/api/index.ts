@@ -1,5 +1,5 @@
 import http from '@/request'
-import { CartItemAddType, CartItemDeleteType, CartItemUpdateType, PathIdType } from '@/types'
+import { CartItemAddType, CartItemDeleteType, CartItemUpdateType, OrderCreateType, PathIdType } from '@/types'
 import { OptionsType } from '@/request/types'
 
 // 登录
@@ -73,4 +73,10 @@ export const getCartListByIds = (ids: Record<string, string>, options?: OptionsT
     url: `/client/cart/select`,
     params: ids,
     options
+})
+
+// 提交订单
+export const createOrder = (data: OrderCreateType) => http.post({
+  url: `/client/order`,
+  data: data,
 })

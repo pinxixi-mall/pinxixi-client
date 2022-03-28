@@ -20,7 +20,6 @@
 
 <script setup lang="ts">
 import { CartItemType } from '@/types'
-import { defineProps } from 'vue'
 import { PRICE_DECIMAL } from '@/config/constants'
 
 const props = defineProps<{

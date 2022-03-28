@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { NavBarProps } from 'vant';
-import { defineProps, defineEmits, useAttrs } from 'vue'
+import { useAttrs } from 'vue'
 import { useRouter } from 'vue-router';
 
 const props = defineProps<NavBarProps>()

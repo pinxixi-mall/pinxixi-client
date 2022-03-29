@@ -208,7 +208,6 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .goods-wrapper {
-  min-height: 100vh;
   padding: 0 16px;
   padding-bottom: v-bind(wrapperBottom);
   box-sizing: border-box;

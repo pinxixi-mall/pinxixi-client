@@ -73,6 +73,7 @@ import Card from '@/components/Card/index.vue'
 import { useRoute, useRouter } from "vue-router"
 import { PRICE_DECIMAL } from "@/config/constants"
 import { getCartListByIds, createOrder } from '@/api'
+import { Dialog, Toast } from "vant";
 
 export default defineComponent({
     components: { GoodsCard, Card },
@@ -80,10 +81,7 @@ export default defineComponent({
         const state = reactive<{
             goodsList: CartItemType[],
         }>({
-            goodsList: [
-                { cartId: 2, goodsId: 1, goodsName: 'sfsdf', goodsCount: 1, goodsImage: 'https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg', goodsDesc: 'sdfdsf', goodsPrice: 16 },
-                { cartId: 2, goodsId: 1, goodsName: 'sfsdf', goodsCount: 1, goodsImage: 'https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg', goodsDesc: 'sdfdsf', goodsPrice: 16 }
-            ],
+            goodsList: [],
         })
         const router = useRouter()
         const route = useRoute()
@@ -92,15 +90,20 @@ export default defineComponent({
         onMounted(() => {
             const { ids } = route.query
             if (ids) {
-                cartIds = ids.toString() //.toString().split(',').map(id => parseInt(id))
+                cartIds = ids.toString()
                 getGoods()
             }
         })
 
         const getGoods = async () => {
-            console.log(cartIds);
-            
             const { data } = await getCartListByIds({ cartIds })
+            if (!data || !data.length) {
+                Dialog.alert({
+                    title: '订单不存在',
+                }).then(() => {
+                    router.replace('/cart')
+                })
+            }
             state.goodsList = data
         }
 
@@ -115,13 +118,16 @@ export default defineComponent({
 
         // 确认提交
         const onConfirm = async () => {
-            await createOrder({
+            const { data } = await createOrder({
                 cartIds: state.goodsList.map(it => it.cartId),
                 orderCoupon: couponValue.value
             })
-            router.push({
-                path: '/order/detail'
-            })
+            if(data && data.orderId) {
+                router.push({
+                    path: '/order/detail',
+                    query: { orderId: data.orderId }
+                })
+            }
         }
 
         /**
@@ -162,6 +168,8 @@ export default defineComponent({
 <style lang="less" scoped>
 .order-address {
     position: relative;
+    padding: 4px 0;
+    background-color: #fff;
     :deep(.van-cell){
         background-color: #fff;
     }

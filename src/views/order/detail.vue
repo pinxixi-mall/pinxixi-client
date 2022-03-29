@@ -25,7 +25,7 @@
     <Card class="order-content card">
         <goods-card
             class="order-goods"
-            v-for="goods in goodsList"
+            v-for="goods in orderDetail.goodsList"
             :key="goods.goodsId"
             :goods="goods"
         >
@@ -36,11 +36,11 @@
     </Card>
     <!-- 商品金额 -->
     <van-cell-group inset class="order-cost">
-        <van-cell title="商品金额" value="￥1999.00" />
+        <van-cell title="商品金额" :value="'￥' + totalGoodsPrice" />
         <van-cell title="运费" value="￥0.00" />
         <div class="total">
             <span class="label">合计：</span>
-            <span class="value price">13666</span>
+            <span class="value price">{{orderDetail.orderPrice}}</span>
         </div>
     </van-cell-group>
     <!-- 支付方式 -->
@@ -67,8 +67,8 @@
     </van-cell-group>
     <!-- 订单明细 -->
     <van-cell-group inset class="order-detail card" :border="false">
-        <van-cell title="下单时间" value="2022-03-03 12:13:14" />
-        <van-cell title="订单编号" value="1646878965464">
+        <van-cell title="下单时间" :value="orderDetail.createTime" />
+        <van-cell title="订单编号" :value="orderDetail.orderNo">
             <template #right-icon>
                 <span style="font-size: 12px;color: var(--van-blue);margin-left: 6px;">复制</span>
             </template>
@@ -81,22 +81,49 @@
 </template>
 
 <script lang="ts">
-import { CartItemType } from "@/types";
-import { defineComponent, reactive, ref, toRefs } from "vue"
+import { OrderGoods } from "@/types";
+import { computed, defineComponent, onMounted, reactive, ref, toRefs } from "vue"
 import GoodsCard from '@/components/GoodsCard/index.vue'
 import Card from '@/components/Card/index.vue'
-import { useRouter } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
+import { getOrder } from '@/api'
+
+interface OrderDetail {
+    goodsList: OrderGoods[],
+    orderPrice: number;
+    orderNo: string;
+    createTime: string;
+}
 
 export default defineComponent({
     components: { GoodsCard, Card },
     setup() {
         const state = reactive<{
-            goodsList: CartItemType[]
+            orderId: number;
+            orderDetail: OrderDetail | any;
         }>({
-            goodsList: [
-                { cartId: 2, goodsId: 1, goodsName: 'sfsdf', goodsCount: 1, goodsImage: 'https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg', goodsDesc: 'sdfdsf', goodsPrice: 16 },
-                { cartId: 2, goodsId: 1, goodsName: 'sfsdf', goodsCount: 1, goodsImage: 'https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg', goodsDesc: 'sdfdsf', goodsPrice: 16 }
-            ]
+            orderId: -1,
+            orderDetail: {
+                goodsList: []
+            }
+        })
+        const route = useRoute()
+
+        onMounted(() => {
+            const { orderId } = route.query
+            state.orderId = Number(orderId)
+            if (orderId) {
+                getOrderDetail()
+            }
+        })
+
+        const getOrderDetail = async () => {
+            const { data } = await getOrder(state.orderId)
+            state.orderDetail = data
+        }
+
+        const totalGoodsPrice = computed(() => {
+            return state.orderDetail.goodsList.reduce((ret: number, it: OrderGoods) => ret + it.goodsPrice * it.goodsCount, 0)
         })
 
         const remainTime = ref(15 * 60 * 60 * 1000)
@@ -113,6 +140,7 @@ export default defineComponent({
             ...toRefs(state),
             paymentWay,
             remainTime,
+            totalGoodsPrice,
             onSubmit
         }
     },
@@ -208,8 +236,14 @@ export default defineComponent({
 }
 
 .order-detail {
+    :deep(.van-cell){
+        justify-content: space-between;
+    }
     :deep(.van-cell__title) {
         color: var(--van-cell-value-color);
+    }
+    :deep(.van-cell__value) {
+        flex: 2;
     }
 }
 </style>

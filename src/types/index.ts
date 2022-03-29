@@ -70,3 +70,14 @@ export interface OrderCreateType {
   cartIds: number[];
   orderCoupon: number;
 }
+
+// 订单商品
+export interface OrderGoods {
+  orderId: number;
+  goodsId: number;
+  goodsName: string;
+  goodsDesc: string;
+  goodsCount: number;
+  goodsPrice: number;
+  goodsImage: string;
+}

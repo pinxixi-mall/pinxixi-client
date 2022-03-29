@@ -80,3 +80,8 @@ export const createOrder = (data: OrderCreateType) => http.post({
   url: `/client/order`,
   data: data,
 })
+
+// 订单详情
+export const getOrder = (orderId: number) => http.get({
+  url: `/client/order/${orderId}`,
+})

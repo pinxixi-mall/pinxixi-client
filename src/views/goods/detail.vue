@@ -120,7 +120,6 @@ const { detail } = toRefs(state)
 @import '@/styles/index.less';
 
 .detail {
-  height: 100vh;
   overflow-y: auto;
   background-color: var(--pxx-page-background);
   padding: 0 0 50px;

@@ -8,50 +8,66 @@
         @click-left="$router.go(-1)"
     />
     <van-address-edit
+        ref="addressEditRef"
+        :address-info="addressEditInfo"
         :area-list="areaList"
         show-postal
         show-delete
         show-set-default
-        show-search-result
-        :search-result="searchResult"
         :area-columns-placeholder="['请选择', '请选择', '请选择']"
         @save="onSave"
         @delete="onDelete"
-        @change-detail="onChangeDetail"
     />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 import { ref } from 'vue';
 import { Toast } from 'vant';
 import { areaList } from '@vant/area-data'
+import { getAddressById } from '@/api'
+import { useRoute, useRouter } from 'vue-router'
+import type { AddressEditInstance, AddressEditInfo } from 'vant'
 
 export default defineComponent({
     setup() {
-        const searchResult = ref([]);
-
-        const onSave = () => Toast('save');
-        const onDelete = () => Toast('delete');
-        const onChangeDetail = (val) => {
-            if (val) {
-                searchResult.value = [
-                    {
-                        name: '黄龙万科中心',
-                        address: '杭州市西湖区',
-                    },
-                ];
-            } else {
-                searchResult.value = [];
+        const route = useRoute()
+        const router = useRouter()
+        const addressEditRef = ref<AddressEditInstance>()
+        const addressEditInfo = ref<AddressEditInfo>()
+        let addressId: number
+        
+        onMounted(() => {
+            const { id } = route.query
+            if (id) {
+                addressId = +id
+                getAddresInfo()
             }
-        };
+        })
+
+        const getAddresInfo = async () => {
+            const { data } = await getAddressById(addressId)
+            const { county, isDefault } = data
+            data.areaCode = county
+            data.isDefault = isDefault === 1
+            addressEditInfo.value = data
+        }
+
+
+
+        const onSave = () => {
+
+        }
+        const onDelete = () => {
+
+        }
 
         return {
+            addressEditRef,
+            areaList,
+            addressEditInfo,
             onSave,
             onDelete,
-            areaList,
-            searchResult,
-            onChangeDetail,
         };
     },
 })

@@ -25,30 +25,7 @@ import { AddressType } from '@/types'
 
 export default defineComponent({
     setup() {
-        const chosenAddressId = ref('1');
-        const list = [
-            {
-                id: '1',
-                name: '张三',
-                tel: '13000000000',
-                address: '浙江省杭州市西湖区文三路 138 号东方通信大厦 7 楼 501 室',
-                isDefault: true,
-            },
-            {
-                id: '2',
-                name: '李四',
-                tel: '1310000000',
-                address: '浙江省杭州市拱墅区莫干山路 50 号',
-            },
-        ];
-        const disabledList = [
-            {
-                id: '3',
-                name: '王五',
-                tel: '1320000000',
-                address: '浙江省杭州市滨江区江南大道 15 号',
-            },
-        ];
+        const chosenAddressId = ref()
         const addressList = ref()
         const router = useRouter()
         
@@ -59,9 +36,8 @@ export default defineComponent({
         const getAddresInfo = async () => {
             const { data } = await getAddress()
             addressList.value = data.map((address: AddressType) => ({
+                ...address,
                 id: address.addressId,
-                name: address.recipient,
-                tel: address.phone,
                 address: address.addressDetail,
                 isDefault: address.isDefault === 1
             }))
@@ -71,14 +47,14 @@ export default defineComponent({
             router.push('/mine/address-edit')
         }
         const onEdit = (item: any, index: number) => {
-            router.push('/mine/address-edit')
+            console.log(item);
+            
+            router.push(`/mine/address-edit?id=${item.id}`)
         }
 
         return {
-            list,
             onAdd,
             onEdit,
-            disabledList,
             chosenAddressId,
             addressList
         };

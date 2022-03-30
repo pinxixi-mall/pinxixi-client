@@ -142,11 +142,11 @@ export interface OrderDetail {
 export interface AddressType {
     addressId: number;
     userId: string;
-    recipient: string;
-    phone: string;
+    name: string;
+    tel: string;
     isDefault: number;
     province: string;
     city: string;
-    region: string;
+    county: string;
     addressDetail: string;
 }

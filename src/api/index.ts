@@ -96,3 +96,8 @@ export const updateOrder = (data: UpdateOrder) => http.put({
 export const getAddress = () => http.get({
     url: `/client/address`,
 })
+
+// 用户地址
+export const getAddressById = (id: number) => http.get({
+    url: `/client/address/${id}`,
+})

@@ -73,7 +73,8 @@ import Card from '@/components/Card/index.vue'
 import { useRoute, useRouter } from "vue-router"
 import { PRICE_DECIMAL } from "@/config/constants"
 import { getCartListByIds, createOrder } from '@/api'
-import { Dialog, Toast } from "vant";
+import { Dialog } from "vant"
+import coupon from "@/config/coupon"
 
 export default defineComponent({
     components: { GoodsCard, Card },
@@ -133,17 +134,7 @@ export default defineComponent({
         /**
          * 优惠券
          */
-        const coupon = {
-            available: 1,
-            reason: '',
-            value: 300, // 元 * 100
-            name: '运费券',
-            startAt: Date.now() / 1000,
-            endAt: Date.now() / 1000 + 7 * 24 * 60 * 60,
-            valueDesc: '3',
-            unitDesc: '元',
-        }
-        const coupons = ref<any[]>([coupon])
+        const coupons = ref<any[]>(coupon)
         const showList = ref(false)
         const chosenCoupon = ref(-1)
         const onChange = (index: number) => {

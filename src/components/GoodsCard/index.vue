@@ -19,11 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import { CartItemType } from '@/types'
+import { CartItemType, OrderGoods } from '@/types'
 import { PRICE_DECIMAL } from '@/config/constants'
 
 const props = defineProps<{
-    goods: CartItemType,
+    goods: CartItemType | OrderGoods,
 }>()
 
 const { goods } = props

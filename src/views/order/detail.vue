@@ -2,8 +2,8 @@
     <van-nav-bar title="订单详情" left-arrow fixed placeholder @click-left="$router.go(-1)" />
     <section class="order-status">
         <div class="left">
-            <p class="status">待支付</p>
-            <p class="desc">
+            <p class="status">{{getDictName(orderStatusList, orderDetail.orderStatus)}}</p>
+            <p class="desc" v-if="isToBePaid">
                 <span>订单将在</span>
                 <van-count-down class="count-down" :time="remainTime" />
                 <span>后关闭，请及时支付</span>
@@ -37,25 +37,26 @@
     <!-- 商品金额 -->
     <van-cell-group inset class="order-cost">
         <van-cell title="商品金额" :value="'￥' + totalGoodsPrice" />
+        <van-cell title="优惠金额" :value="'￥' + orderDetail.orderCoupon" />
         <van-cell title="运费" value="￥0.00" />
         <div class="total">
             <span class="label">合计：</span>
-            <span class="value price">{{orderDetail.orderPrice}}</span>
+            <price class="value" :value="orderDetail.orderPrice" />
         </div>
     </van-cell-group>
     <!-- 支付方式 -->
     <van-cell-group inset class="payment-way card">
         <van-cell title="支付方式" />
-        <van-radio-group v-model="paymentWay">
+        <van-radio-group v-model="orderDetail.paymentType">
             <van-cell-group class="cell" inset>
                 <van-cell class="ali" title="支付宝" icon="alipay">
                     <template #right-icon>
-                        <van-radio name="1" />
+                        <van-radio :name="1" :disabled="orderDetail.orderStatus !== 0"/>
                     </template>
                 </van-cell>
                 <van-cell class="weixin" title="微信" icon="wechat">
                     <template #right-icon>
-                        <van-radio name="2" />
+                        <van-radio :name="2" :disabled="orderDetail.orderStatus !== 0" />
                     </template>
                 </van-cell>
             </van-cell-group>
@@ -75,9 +76,9 @@
         </van-cell>
     </van-cell-group>
     <!-- 提交支付 -->
-    <van-submit-bar button-text="立即支付" @submit="onSubmit" />
+    <van-submit-bar v-if="isToBePaid" button-text="立即支付" @submit="onSubmit" />
     <!-- 占位 -->
-    <div style="height: 50px;"></div>
+    <div style="height: 50px;" ></div>
 </template>
 
 <script lang="ts">
@@ -86,28 +87,38 @@ import { computed, defineComponent, onMounted, reactive, ref, toRefs } from "vue
 import GoodsCard from '@/components/GoodsCard/index.vue'
 import Card from '@/components/Card/index.vue'
 import { useRoute, useRouter } from "vue-router"
-import { getOrder } from '@/api'
-
-interface OrderDetail {
-    goodsList: OrderGoods[],
-    orderPrice: number;
-    orderNo: string;
-    createTime: string;
-}
+import { getOrder, updateOrder } from '@/api'
+import { getDictName } from "@/utils"
+import { orderStatusList } from "@/config/dicts"
+import { Dialog, Toast } from "vant"
+import { UpdateOrder, OrderDetail } from '@/types'
+import Price from '@/components/Price'
 
 export default defineComponent({
-    components: { GoodsCard, Card },
+    components: { GoodsCard, Card, Price },
     setup() {
         const state = reactive<{
             orderId: number;
-            orderDetail: OrderDetail | any;
+            orderDetail: Partial<OrderDetail>;
         }>({
             orderId: -1,
-            orderDetail: {
-                goodsList: []
-            }
+            orderDetail: {}
         })
         const route = useRoute()
+
+        const remainTime = ref(15 * 60 * 60 * 1000)
+        // 待支付
+        const isToBePaid = computed(() => state.orderDetail.orderStatus === 0)
+        // 状态栏背景色
+        const statusBgColor = computed(() => {
+            const colors: Record<number, string> = {
+                0: '#ff976a', // 待支付
+                1: '#1989fa', // 待发货
+                2: '#07c160', // 交易成功
+            }
+            const status = state.orderDetail.orderStatus
+            return colors[Number(status)] || '#ccc'
+        })
 
         onMounted(() => {
             const { orderId } = route.query
@@ -118,30 +129,49 @@ export default defineComponent({
         })
 
         const getOrderDetail = async () => {
-            const { data } = await getOrder(state.orderId)
-            state.orderDetail = data
+            try {
+                const { data } = await getOrder(state.orderId)
+                state.orderDetail = data
+            } catch (error) {
+                Dialog.alert({
+                    title: "订单不存在"
+                }).then(() => router.push("/cart"))
+            }
         }
 
         const totalGoodsPrice = computed(() => {
-            return state.orderDetail.goodsList.reduce((ret: number, it: OrderGoods) => ret + it.goodsPrice * it.goodsCount, 0)
+            return state.orderDetail.goodsList && state.orderDetail.goodsList.reduce((ret: number, it: OrderGoods) => ret + it.goodsPrice * it.goodsCount, 0)
         })
 
-        const remainTime = ref(15 * 60 * 60 * 1000)
-        const paymentWay = ref<string>()
-
         const router = useRouter()
-        const onSubmit = () => {
+        const onSubmit = async () => {
+            if (!state.orderDetail.paymentType) {
+                Toast("请选择支付方式")
+                return
+            }
+            const param: UpdateOrder = {
+                orderId: state.orderId,
+                orderStatus: 1,
+                paymentStatus: 1,
+                paymentType: state.orderDetail.paymentType
+            }
+            await updateOrder(param)
+            Toast.success('支付成功！')
             router.push({
-                path: '/order/payment'
+                path: '/order/payment',
+                query: { orderId: state.orderId }
             })
         }
 
         return {
             ...toRefs(state),
-            paymentWay,
             remainTime,
             totalGoodsPrice,
-            onSubmit
+            orderStatusList,
+            isToBePaid,
+            statusBgColor,
+            onSubmit,
+            getDictName
         }
     },
 })
@@ -154,8 +184,8 @@ export default defineComponent({
     justify-content: space-between;
     align-items: center;
     padding: 20px 30px;
-    background-color: var(--van-blue);
     color: #fff;
+    background-color: v-bind(statusBgColor);
     .status {
         font-size: 20px;
         margin-bottom: 4px;
@@ -163,7 +193,6 @@ export default defineComponent({
     .desc {
         font-size: 12px;
         display: flex;
-        align-items: center;
         .count-down{
             width: 60px;
             margin: 0 2px;

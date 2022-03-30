@@ -9,7 +9,7 @@
     />
     <van-address-list
         v-model="chosenAddressId"
-        :list="list"
+        :list="addressList"
         default-tag-text="默认"
         @add="onAdd"
         @edit="onEdit"
@@ -17,9 +17,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { Toast } from 'vant'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
+import { getAddress } from '@/api'
+import { AddressType } from '@/types'
 
 export default defineComponent({
     setup() {
@@ -47,7 +49,23 @@ export default defineComponent({
                 address: '浙江省杭州市滨江区江南大道 15 号',
             },
         ];
+        const addressList = ref()
         const router = useRouter()
+        
+        onMounted(() => {
+            getAddresInfo()
+        })
+
+        const getAddresInfo = async () => {
+            const { data } = await getAddress()
+            addressList.value = data.map((address: AddressType) => ({
+                id: address.addressId,
+                name: address.recipient,
+                tel: address.phone,
+                address: address.addressDetail,
+                isDefault: address.isDefault === 1
+            }))
+        }
 
         const onAdd = () => {
             router.push('/mine/address-edit')
@@ -62,6 +80,7 @@ export default defineComponent({
             onEdit,
             disabledList,
             chosenAddressId,
+            addressList
         };
     },
 

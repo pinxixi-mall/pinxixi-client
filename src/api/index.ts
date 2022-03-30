@@ -1,5 +1,5 @@
 import http from '@/request'
-import { CartItemAddType, CartItemDeleteType, CartItemUpdateType, OrderCreateType, PathIdType } from '@/types'
+import { CartItemAddType, CartItemDeleteType, CartItemUpdateType, OrderCreateType, PathIdType, UpdateOrder } from '@/types'
 import { OptionsType } from '@/request/types'
 
 // 登录
@@ -84,4 +84,15 @@ export const createOrder = (data: OrderCreateType) => http.post({
 // 订单详情
 export const getOrder = (orderId: number) => http.get({
   url: `/client/order/${orderId}`,
+})
+
+// 更新订单（支付，发货，关闭，删除）
+export const updateOrder = (data: UpdateOrder) => http.put({
+  url: `/client/order`,
+  data
+})
+
+// 用户地址列表
+export const getAddress = () => http.get({
+    url: `/client/address`,
 })

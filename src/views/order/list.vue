@@ -1,7 +1,7 @@
 <template>
     <van-nav-bar title="我的订单" left-arrow fixed placeholder z-index="2" @click-left="$router.go(-1)" />
-    <van-tabs v-model:active="status" sticky offset-top="46">
-        <van-tab v-for="item in statusList" :title="item.title">
+    <van-tabs v-model:active="queryParam.orderStatus" sticky offset-top="46">
+        <van-tab v-for="item in statusList" :name="item.value" :title="item.title">
             <van-list
                 v-model:loading="loading"
                 :finished="finished"
@@ -30,8 +30,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs } from 'vue'
+import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
 import GoodsCard from '@/components/GoodsCard/index.vue'
+import { getOrderList } from '@/api'
 
 export default defineComponent({
     components: { GoodsCard },
@@ -45,7 +46,6 @@ export default defineComponent({
             { title: '已取消', value: 3 },
         ])
         const state = reactive({
-            status: 1,
             finished: false,
             orderList: [
                 {
@@ -71,10 +71,25 @@ export default defineComponent({
                         { cartId: 2, goodsId: 1, goodsName: 'sfsdf', goodsCount: 1, goodsImage: 'https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg', goodsDesc: 'sdfdsf', goodsPrice: 16 }
                     ]
                 }
-            ]
+            ],
+            queryParam: {
+                pageNum: 0,
+                pageSize: 5,
+                orderStatus: -1
+            }
         })
-        const onLoad = () => {
 
+        onMounted(() => {
+
+        })
+
+        const onLoad = async () => {
+            loading.value = false
+            state.queryParam.pageNum++
+            const { data: { list } } = await getOrderList(state.queryParam)
+            loading.value = true
+            state.orderList = [...state.orderList, ...list]
+            // state.finished = true
         }
 
         return {

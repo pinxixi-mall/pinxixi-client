@@ -10,6 +10,7 @@
     <van-address-list
         v-model="chosenAddressId"
         :list="addressList"
+        :switchable="switchable"
         default-tag-text="默认"
         @add="onAdd"
         @edit="onEdit"
@@ -18,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useRoute, useRouter, RouteLocationNormalized } from 'vue-router'
 import { getAddress } from '@/api'
 import { Address } from '@/types'
@@ -33,10 +34,17 @@ export default defineComponent({
     setup() {
         const chosenAddressId = ref()
         const addressList = ref()
+        const prevPath = ref<any>({})
         const router = useRouter()
         const route = useRoute()
+
+        const switchable = computed(() => {
+            const disabledPaths = ['/mine', '/mine/address-edit']
+            return !disabledPaths.includes(prevPath.value.path)
+        })
         
         onMounted(() => {
+            prevPath.value = prevPathObj
             if (route.query.id) {
                 chosenAddressId.value = +route.query.id
             }
@@ -61,10 +69,12 @@ export default defineComponent({
         }
 
         const onAddressClick = (item: any) => {
+            const { fullPath, query, path } = prevPathObj
+            if (!switchable.value) return
             router.push({
-                path: prevPathObj.fullPath,
+                path: fullPath,
                 query: {
-                    ...prevPathObj.query,
+                    ...query,
                     addressId: item.addressId
                 }
             })
@@ -73,6 +83,7 @@ export default defineComponent({
         return {
             chosenAddressId,
             addressList,
+            switchable,
             onAdd,
             onEdit,
             onAddressClick

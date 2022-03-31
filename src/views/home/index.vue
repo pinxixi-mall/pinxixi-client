@@ -53,7 +53,7 @@
                             </div>
                         </WaterfallItem>
                     </Waterfall>
-                    <BottomLoading :isLoading="isRecommendLoading" :isLastPage="isLastPage" />
+                    <BottomLoading :isLoading="isRecommendLoading" :isLastPage="isLastRecommendPage" />
                 </div>
             <!-- </van-pull-refresh> -->
         </div>
@@ -81,19 +81,14 @@ export default defineComponent({
     components: { BottomLoading, Waterfall, WaterfallItem },
     setup() {
         const router = useRouter()
+        const isLastRecommendPage = ref()
         const state: HomeStateType = reactive({
             carouselList: [],
             recommendList: [],
             recommendPage: {
                 pageNum: 1,
                 pageSize: 10,
-                total: 0
             }
-        })
-
-        const isLastPage = computed(() => {
-            const { recommendList, recommendPage: { total } } = state
-            return recommendList.length >= total
         })
 
         onMounted(() => {
@@ -120,7 +115,7 @@ export default defineComponent({
         const scrollBox = ref()
         const scrollContent = ref()
         useScrollToBottom(scrollBox, scrollContent, () => {
-            if (!isLastPage.value) {
+            if (!isLastRecommendPage.value) {
                 state.recommendPage.pageNum++
                 getRecommend()
             }
@@ -145,8 +140,11 @@ export default defineComponent({
                 const { data } = await getRecommendList(params)
                 const { recommendList } = state
                 state.recommendList = [...recommendList, ...data.list]
-                Object.assign(state.recommendPage, { pageNum: data.pageNum, pageSize: data.pageSize, total: data.total })
+                Object.assign(state.recommendPage, { pageNum: data.pageNum, pageSize: data.pageSize })
                 isRecommendLoading.value = false
+                if (state.recommendList.length >= data.total) {
+                    isLastRecommendPage.value = true
+                }
             } catch (error) {
                 isRecommendLoading.value = false
             }
@@ -170,7 +168,7 @@ export default defineComponent({
             searchValue,
             quickNavList,
             isRefreshLoading,
-            isLastPage,
+            isLastRecommendPage,
             isRecommendLoading,
             scrollBox,
             scrollContent,

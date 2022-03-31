@@ -17,7 +17,6 @@ export interface RecommendType {
 export interface PageType {
     pageNum: number;
     pageSize: number;
-    total: number;
 }
 
 /**

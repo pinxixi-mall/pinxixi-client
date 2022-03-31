@@ -8,7 +8,8 @@ import {
   UpdateAddress,
   UpdateOrder,
   Address,
-  QueryId
+  QueryId,
+  PageType
 } from '@/types'
 import { OptionsType } from '@/request/types'
 
@@ -115,6 +116,13 @@ export const updateOrder = (data: UpdateOrder) =>
   http.put({
     url: `/client/order`,
     data
+  })
+
+// 订单列表
+export const getOrderList = (data: PageType) =>
+  http.get({
+    url: `/client/order/list`,
+    params: data
   })
 
 // 用户地址列表

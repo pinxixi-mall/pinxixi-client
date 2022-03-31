@@ -1,5 +1,5 @@
 <template>
-    <van-nav-bar title="订单详情" left-arrow fixed placeholder @click-left="$router.go(-1)" />
+    <van-nav-bar title="订单详情" left-arrow fixed placeholder @click-left="onBackClick" />
     <section class="order-status">
         <div class="left">
             <p class="status">{{getDictName(orderStatusList, orderDetail.orderStatus)}}</p>
@@ -169,6 +169,21 @@ export default defineComponent({
             })
         }
 
+        const onBackClick = () => {
+            if (state.orderDetail.orderStatus === 0) {
+                // 待支付订单返回提示
+                Dialog.confirm({
+                    title: '订单还没支付哦，确认返回？',
+                    cancelButtonText: '返回支付',
+                    confirmButtonText: '稍后支付',
+                    confirmButtonColor: 'black',
+                    cancelButtonColor: '#ee0a24'
+                }).then(() => {
+                    router.push('/cart')
+                })
+            }
+        }
+
         return {
             ...toRefs(state),
             remainTime,
@@ -177,7 +192,8 @@ export default defineComponent({
             isToBePaid,
             statusBgColor,
             onSubmit,
-            getDictName
+            getDictName,
+            onBackClick
         }
     },
 })
@@ -199,6 +215,7 @@ export default defineComponent({
     .desc {
         font-size: 12px;
         display: flex;
+        align-items: center;
         .count-down{
             width: 60px;
             margin: 0 2px;

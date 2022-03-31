@@ -16,6 +16,7 @@ export const getCurrentAddress = async (addressId?: QueryId) : Promise<Address> 
             const { data } = await getDefaultAddress()
             address = data
         }
+        address = address || {}
         const { province, city, county, addressDetail } = address
         resolve({
             ...address,

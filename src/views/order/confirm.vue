@@ -2,7 +2,7 @@
     <van-nav-bar title="确认订单" left-arrow fixed placeholder @click-left="$router.go(-1)"></van-nav-bar>
     <!-- 地址 -->
     <section class="order-address">
-        <van-cell is-link icon="location-o" :to="'/mine/address?id=' + addressInfo.addressId">
+        <van-cell v-if="addressInfo.addressId" is-link icon="location-o" :to="'/mine/address?id=' + addressInfo.addressId">
             <template #title>
                 <p>{{addressInfo.fullAddress}}</p>
             </template>
@@ -10,7 +10,9 @@
                 <p>{{addressInfo.name}} {{addressInfo.tel}}</p>
             </template>
         </van-cell>
+        <van-cell v-else is-link title="添加收货地址" icon="add-square" to="/mine/address" />
     </section>
+
     <!-- 订单内容 -->
     <Card class="order-content card">
         <goods-card
@@ -73,7 +75,7 @@ import Card from '@/components/Card/index.vue'
 import { useRoute, useRouter } from "vue-router"
 import { PRICE_DECIMAL } from "@/config/constants"
 import { getCartListByIds, createOrder } from '@/api'
-import { Dialog } from "vant"
+import { Dialog, Toast } from "vant"
 import coupon from "@/config/coupon"
 import { getCurrentAddress } from "@/utils/addressUtils";
 
@@ -126,6 +128,10 @@ export default defineComponent({
 
         // 确认提交
         const onConfirm = async () => {
+            if (!state.addressInfo.addressId) {
+                Toast('还没有添加收货地址哦')
+                return
+            }
             const { data } = await createOrder({
                 cartIds: state.goodsList.map(it => it.cartId),
                 orderCoupon: couponValue.value,
@@ -171,6 +177,11 @@ export default defineComponent({
     background-color: #fff;
     :deep(.van-cell){
         background-color: #fff;
+        .van-icon-add-square{
+            color: var(--van-primary-color);
+            font-size: 20px;
+            margin-right: 10px;
+        }
     }
     &::before {
         position: absolute;

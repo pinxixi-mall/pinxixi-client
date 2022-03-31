@@ -12,12 +12,12 @@
         <van-icon class="icon" name="paid" />
     </section>
     <section class="order-address card">
-        <van-cell title="单元格" is-link icon="location-o">
+        <van-cell is-link icon="location-o">
             <template #title>
-                <p>广东省深圳市南山区粤海街道 深圳湾1号</p>
+                <p>{{addressInfo.fullAddress}}</p>
             </template>
             <template #label>
-                <p>夜流云 19999999999</p>
+                <p>{{addressInfo.name}} {{addressInfo.tel}}</p>
             </template>
         </van-cell>
     </section>
@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { OrderGoods } from "@/types";
+import { Address, OrderGoods } from "@/types";
 import { computed, defineComponent, onMounted, reactive, ref, toRefs } from "vue"
 import GoodsCard from '@/components/GoodsCard/index.vue'
 import Card from '@/components/Card/index.vue'
@@ -93,6 +93,7 @@ import { orderStatusList } from "@/config/dicts"
 import { Dialog, Toast } from "vant"
 import { UpdateOrder, OrderDetail } from '@/types'
 import Price from '@/components/Price'
+import { getCurrentAddress } from "@/utils/addressUtils";
 
 export default defineComponent({
     components: { GoodsCard, Card, Price },
@@ -100,9 +101,11 @@ export default defineComponent({
         const state = reactive<{
             orderId: number;
             orderDetail: Partial<OrderDetail>;
+            addressInfo: Partial<Address>,
         }>({
             orderId: -1,
-            orderDetail: {}
+            orderDetail: {},
+            addressInfo: {}
         })
         const route = useRoute()
 
@@ -132,6 +135,9 @@ export default defineComponent({
             try {
                 const { data } = await getOrder(state.orderId)
                 state.orderDetail = data
+                // 获取地址信息
+                const address = await getCurrentAddress(data.addressId)
+                state.addressInfo = address
             } catch (error) {
                 Dialog.alert({
                     title: "订单不存在"

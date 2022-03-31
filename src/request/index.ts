@@ -23,7 +23,7 @@ class Request {
         // 全局请求拦截器
         this.instance.interceptors.request.use(
             (config: AxiosRequestConfig) => {
-                !this.noLoading && Toast.loading({ forbidClick: true });
+                this.shwoLoading()
                 const token = getToken()
                 if (token) {
                     config.headers && (config.headers.Authorization = `Bearer ${token}`)
@@ -46,7 +46,7 @@ class Request {
         // 全局响应拦截器
         this.instance.interceptors.response.use(
             (res: AxiosResponse) => {
-                Toast.clear()
+                this.clearLoading()
                 const { data } = res
                 if (data && data.code !== HttpStatusEnum.SUCCESS) {
                     if (data.code === HttpStatusEnum.UNAUTHORIZED) {
@@ -74,7 +74,7 @@ class Request {
                 return data
             },
             (err: any) => {
-                Toast.clear()
+                this.clearLoading()
                 const { response } = err
                 let error = {
                     code: -1,
@@ -105,6 +105,14 @@ class Request {
         )
     }
 
+    shwoLoading() {
+        !this.noLoading && Toast.loading({ forbidClick: true })
+    }
+
+    clearLoading() {
+        !this.noLoading && Toast.clear()
+    }
+  
     request<T>(config: RequestConfig): Promise<T> {
         return new Promise((resolve, reject) => {
             // 单个请求的拦截器

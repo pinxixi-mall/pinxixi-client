@@ -2,12 +2,12 @@
     <van-nav-bar title="确认订单" left-arrow fixed placeholder @click-left="$router.go(-1)"></van-nav-bar>
     <!-- 地址 -->
     <section class="order-address">
-        <van-cell title="单元格" is-link icon="location-o" to="/mine/address">
+        <van-cell is-link icon="location-o" :to="'/mine/address?id=' + addressInfo.addressId">
             <template #title>
-                <p>广东省深圳市南山区粤海街道 深圳湾1号</p>
+                <p>{{addressInfo.fullAddress}}</p>
             </template>
             <template #label>
-                <p>夜流云 19999999999</p>
+                <p>{{addressInfo.name}} {{addressInfo.tel}}</p>
             </template>
         </van-cell>
     </section>
@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { CartItemType } from "@/types";
+import { Address, CartItemType } from "@/types";
 import { computed, defineComponent, onMounted, reactive, ref, toRefs } from "vue"
 import GoodsCard from '@/components/GoodsCard/index.vue'
 import Card from '@/components/Card/index.vue'
@@ -75,25 +75,32 @@ import { PRICE_DECIMAL } from "@/config/constants"
 import { getCartListByIds, createOrder } from '@/api'
 import { Dialog } from "vant"
 import coupon from "@/config/coupon"
+import { getCurrentAddress } from "@/utils/addressUtils";
 
 export default defineComponent({
     components: { GoodsCard, Card },
     setup() {
         const state = reactive<{
+            addressInfo: Partial<Address>,
             goodsList: CartItemType[],
         }>({
+            addressInfo: {},
             goodsList: [],
         })
         const router = useRouter()
         const route = useRoute()
         let cartIds: string
 
-        onMounted(() => {
-            const { ids } = route.query
+        onMounted(async () => {
+            const { ids, addressId } = route.query
             if (ids) {
+                // 获取购物车商品
                 cartIds = ids.toString()
                 getGoods()
             }
+            // 获取地址信息
+            const data = await getCurrentAddress(addressId)
+            state.addressInfo = data
         })
 
         const getGoods = async () => {
@@ -121,7 +128,8 @@ export default defineComponent({
         const onConfirm = async () => {
             const { data } = await createOrder({
                 cartIds: state.goodsList.map(it => it.cartId),
-                orderCoupon: couponValue.value
+                orderCoupon: couponValue.value,
+                addressId: state.addressInfo.addressId
             })
             if(data && data.orderId) {
                 router.push({

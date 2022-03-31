@@ -13,29 +13,39 @@
         default-tag-text="默认"
         @add="onAdd"
         @edit="onEdit"
+        @click-item="onAddressClick"
     />
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import { Toast } from 'vant'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter, RouteLocationNormalized } from 'vue-router'
 import { getAddress } from '@/api'
-import { AddressType } from '@/types'
+import { Address } from '@/types'
+
+let prevPathObj: RouteLocationNormalized
 
 export default defineComponent({
+    beforeRouteEnter(to, from) {
+        // 保存上一页面路由信息
+        prevPathObj = from
+    },
     setup() {
         const chosenAddressId = ref()
         const addressList = ref()
         const router = useRouter()
+        const route = useRoute()
         
         onMounted(() => {
+            if (route.query.id) {
+                chosenAddressId.value = +route.query.id
+            }
             getAddresInfo()
         })
 
         const getAddresInfo = async () => {
             const { data } = await getAddress()
-            addressList.value = data.map((address: AddressType) => ({
+            addressList.value = data.map((address: Address) => ({
                 ...address,
                 id: address.addressId,
                 address: address.addressDetail,
@@ -44,19 +54,28 @@ export default defineComponent({
         }
 
         const onAdd = () => {
-            router.push('/mine/address-edit')
+            router.push('/mine/address-edit?type=ADD')
         }
-        const onEdit = (item: any, index: number) => {
-            console.log(item);
-            
-            router.push(`/mine/address-edit?id=${item.id}`)
+        const onEdit = (item: any) => {
+            router.push(`/mine/address-edit?id=${item.id}&type=EDIT`)
+        }
+
+        const onAddressClick = (item: any) => {
+            router.push({
+                path: prevPathObj.fullPath,
+                query: {
+                    ...prevPathObj.query,
+                    addressId: item.addressId
+                }
+            })
         }
 
         return {
+            chosenAddressId,
+            addressList,
             onAdd,
             onEdit,
-            chosenAddressId,
-            addressList
+            onAddressClick
         };
     },
 

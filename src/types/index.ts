@@ -1,3 +1,4 @@
+import { LocationQueryValue } from "vue-router";
 
 /**
  * 推荐商品
@@ -47,6 +48,11 @@ export interface GoodsType {
 export type PathIdType = number | string | string[]
 
 /**
+ * 路径参数id
+ */
+ export type QueryId = number| LocationQueryValue | LocationQueryValue[]
+
+/**
  * 新增购物车
  */
 export interface CartItemAddType {
@@ -88,6 +94,7 @@ export interface CartItemType {
  */
 export interface OrderCreateType {
   cartIds: number[];
+  addressId: number | undefined;
   orderCoupon: number;
 }
 
@@ -129,6 +136,7 @@ export interface DictItem {
 export interface OrderDetail {
     goodsList?: OrderGoods[];
     orderNo: string;
+    addressId: number;
     orderStatus: number;
     orderPrice: number;
     orderCoupon: number;
@@ -139,14 +147,35 @@ export interface OrderDetail {
 /**
  * 用户地址
  */
-export interface AddressType {
+export interface Address {
     addressId: number;
     userId: string;
     name: string;
     tel: string;
     isDefault: number;
     province: string;
+    provinceCode: string;
     city: string;
+    cityCode: string;
     county: string;
+    countyCode: string;
     addressDetail: string;
+    [x: string]: any;
+}
+
+/**
+ * 更新用户地址
+ */
+ export interface UpdateAddress {
+    addressId: number;
+    name?: string;
+    tel?: string;
+    isDefault?: number | boolean;
+    province?: string;
+    provinceCode?: string;
+    city?: string;
+    cityCode?: string;
+    county?: string;
+    countyCode?: string;
+    addressDetail?: string;
 }

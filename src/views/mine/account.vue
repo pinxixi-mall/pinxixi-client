@@ -17,61 +17,70 @@
         <van-cell-group inset>
             <van-field
                 v-model="userName"
-                name="用户名"
+                name="userName"
                 label="用户名"
                 placeholder="用户名"
                 input-align="right"
                 :rules="[{ required: true, message: '用户名不能为空' }]"
             />
             <van-field
-                v-model="nickname"
-                name="昵称"
+                v-model="nickName"
+                name="nickName"
                 label="昵称"
                 placeholder="昵称"
                 input-align="right"
-                :rules="[{ required: true, message: '昵称不能为空' }]"
             />
             <van-field
-                v-model="password"
-                type="password"
-                name="密码"
-                label="密码"
-                placeholder="密码"
+                v-model="phone"
+                name="phone"
+                label="手机号"
+                placeholder="手机号"
                 input-align="right"
-                :rules="[{ required: true, message: '请填写密码' }]"
+            />
+            <van-field
+                v-model="email"
+                name="email"
+                label="邮箱"
+                placeholder="邮箱"
+                input-align="right"
             />
         </van-cell-group>
-        <div style="margin: 30px 16px;">
+        <div style="margin: 30px 16px">
             <van-button round block native-type="submit">保存</van-button>
+            <van-button round block style="margin-top: 10px;">修改密码</van-button>
         </div>
     </van-form>
 </template>
 
 <script lang="ts">
+import { UserInfo } from '@/types'
 import { defineComponent, reactive, toRefs } from 'vue'
 import { ref } from 'vue'
+import { updateUserInfo } from '@/api'
 
 export default defineComponent({
     setup() {
-        const state = reactive({
-            avatar: null,
+        const userInfo = reactive<Partial<UserInfo>>({
+            avatar: '',
             userName: '',
-            nickname: '',
-            password: ''
+            nickName: '',
+            phone: '',
+            email: ''
         })
         const afterRead = (file: any) => {
             // 此时可以自行将文件上传至服务器
-            state.avatar = file.content
+            userInfo.avatar = file.content
 
             console.log(file);
         };
 
-        const onSubmit = (values: any) => {
+        const onSubmit = async (values: any) => {
             console.log('submit', values);
+            await updateUserInfo(values)
         };
 
         return {
-            ...toRefs(state),
+            ...toRefs(userInfo),
             afterRead,
             onSubmit,
         };

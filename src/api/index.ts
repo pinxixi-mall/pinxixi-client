@@ -9,7 +9,8 @@ import {
   UpdateOrder,
   Address,
   QueryId,
-  PageType
+  PageType,
+  UserInfo
 } from '@/types'
 import { OptionsType } from '@/request/types'
 
@@ -33,6 +34,13 @@ export const getUserInfo = (options?: OptionsType) =>
     url: `/client/user`,
     data: null,
     options
+  })
+
+// 修改用户信息
+export const updateUserInfo = (data: UserInfo) =>
+  http.put({
+    url: `/client/user`,
+    data: data,
   })
 
 // 退出登录

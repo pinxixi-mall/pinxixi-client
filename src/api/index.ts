@@ -16,15 +16,29 @@ import { OptionsType } from '@/request/types'
 // 登录
 export const login = (data: any) =>
   http.post({
-    url: `/client/login`,
+    url: `/client/user/login`,
     data
   })
 
 // 注册
 export const register = (data: any) =>
   http.post({
-    url: `/client/register`,
+    url: `/client/user/register`,
     data
+  })
+
+// 用户信息
+export const getUserInfo = (options?: OptionsType) =>
+  http.get({
+    url: `/client/user`,
+    data: null,
+    options
+  })
+
+// 退出登录
+export const logout = () =>
+  http.post({
+    url: `/client/user/logout`
   })
 
 // 首页轮播
@@ -119,10 +133,11 @@ export const updateOrder = (data: UpdateOrder) =>
   })
 
 // 订单列表
-export const getOrderList = (data: PageType) =>
+export const getOrderList = (data: PageType, options?: OptionsType) =>
   http.get({
     url: `/client/order/list`,
-    params: data
+    params: data,
+    options
   })
 
 // 用户地址列表

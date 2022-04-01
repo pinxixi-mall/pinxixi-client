@@ -1,12 +1,15 @@
 import { useTabbarStore } from '@/stores'
+import { getToken, isEmpty } from '@/utils'
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { NO_TOKEN_PATH } from '@/config/constants'
+import { Toast } from 'vant'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     redirect: 'home',
     meta: {
-      title: '首页',
+      title: '首页'
     },
     component: () => import('@/views/home/index.vue')
   },
@@ -14,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'login',
     meta: {
-      title: '登录',
+      title: '登录'
     },
     component: () => import('@/views/user/login.vue')
   },
@@ -22,7 +25,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/register',
     name: 'register',
     meta: {
-      title: '注册',
+      title: '注册'
     },
     component: () => import('@/views/user/register.vue')
   },
@@ -35,7 +38,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'home',
         name: 'home',
         meta: {
-          title: '首页',
+          title: '首页'
         },
         component: () => import('@/views/home/index.vue')
       },
@@ -43,7 +46,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'category',
         name: 'category',
         meta: {
-          title: '商品分类',
+          title: '商品分类'
         },
         component: () => import('@/views/category/index.vue')
       },
@@ -51,7 +54,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'cart',
         name: 'cart',
         meta: {
-          title: '购物车',
+          title: '购物车'
         },
         component: () => import('@/views/cart/index.vue')
       },
@@ -59,25 +62,25 @@ const routes: Array<RouteRecordRaw> = [
         path: 'mine',
         name: 'mine',
         meta: {
-          title: '我的',
+          title: '我的'
         },
         component: () => import('@/views/mine/index.vue')
       }
     ]
   },
   {
-      path: '/goods/detail/:id',
-      name: '/goods/detail',
-      meta: {
-        title: '商品详情',
-      },
-      component: () => import('@/views/goods/detail.vue')
+    path: '/goods/detail/:id',
+    name: '/goods/detail',
+    meta: {
+      title: '商品详情'
+    },
+    component: () => import('@/views/goods/detail.vue')
   },
   {
     path: '/order/confirm',
     name: '/order/confirm',
     meta: {
-      title: '确认订单',
+      title: '确认订单'
     },
     component: () => import('@/views/order/confirm.vue')
   },
@@ -85,7 +88,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/order/detail',
     name: '/order/detail',
     meta: {
-      title: '订单详情',
+      title: '订单详情'
     },
     component: () => import('@/views/order/detail.vue')
   },
@@ -93,7 +96,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/order/payment',
     name: '/order/payment',
     meta: {
-      title: '支付结果',
+      title: '支付结果'
     },
     component: () => import('@/views/order/payment.vue')
   },
@@ -101,7 +104,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/order/list/:status',
     name: '/order/list',
     meta: {
-      title: '我的订单',
+      title: '我的订单'
     },
     component: () => import('@/views/order/list.vue')
   },
@@ -109,7 +112,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/mine/address',
     name: '/mine/address',
     meta: {
-      title: '地址管理',
+      title: '地址管理'
     },
     component: () => import('@/views/mine/address.vue')
   },
@@ -117,7 +120,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/mine/address-edit',
     name: '/mine/address-edit',
     meta: {
-      title: '地址编辑',
+      title: '地址编辑'
     },
     component: () => import('@/views/mine/address-edit.vue')
   },
@@ -125,7 +128,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/mine/account',
     name: '/mine/account',
     meta: {
-      title: '账号管理',
+      title: '账号管理'
     },
     component: () => import('@/views/mine/account.vue')
   }
@@ -136,11 +139,18 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach((to, from, next) => {
   // 需要隐藏底部tabbar时在路径传入hide=1
   const { hide } = to.query
   const tabbarStore = useTabbarStore()
   tabbarStore.setTabbarShow(!hide)
+
+  if (NO_TOKEN_PATH.includes(to.path) || !isEmpty(getToken())) {
+    next()
+  } else {
+    Toast('未登录')
+    next({ name: 'login' })
+  }
 })
 
 export default router

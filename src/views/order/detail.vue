@@ -179,8 +179,10 @@ export default defineComponent({
                     confirmButtonColor: 'black',
                     cancelButtonColor: '#ee0a24'
                 }).then(() => {
-                    router.push('/cart')
+                    router.go(-1)
                 })
+            } else {
+                router.go(-1)
             }
         }
 

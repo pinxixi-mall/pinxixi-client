@@ -21,3 +21,8 @@ export const PURCHASE_QUANTITY_MAX = 99
  * 商品价格小数位
  */
 export const PRICE_DECIMAL = 2
+
+/**
+ * 不需要token的路由
+ */
+ export const NO_TOKEN_PATH = ['/login', '/register', '/home', '/category']

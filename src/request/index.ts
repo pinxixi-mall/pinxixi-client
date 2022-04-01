@@ -18,12 +18,11 @@ class Request {
     constructor(config: RequestConfig) {
         this.instance = axios.create(config)
         this.interceptorsObj = config.interceptors
-        this.noLoading = config.options?.noLoading
 
         // 全局请求拦截器
         this.instance.interceptors.request.use(
-            (config: AxiosRequestConfig) => {
-                this.shwoLoading()
+            (config: RequestConfig) => {
+                this.shwoLoading(config)
                 const token = getToken()
                 if (token) {
                     config.headers && (config.headers.Authorization = `Bearer ${token}`)
@@ -105,7 +104,8 @@ class Request {
         )
     }
 
-    shwoLoading() {
+    shwoLoading(config: RequestConfig) {
+        this.noLoading = config.options?.noLoading
         !this.noLoading && Toast.loading({ forbidClick: true })
     }
 

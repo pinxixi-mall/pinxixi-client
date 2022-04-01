@@ -1,6 +1,17 @@
 import { LocationQueryValue } from "vue-router";
 
 /**
+ * 用户信息
+ */
+export interface UserInfo {
+    userName: string;
+    nickName: string;
+    phone: string;
+    email: string;
+    avatar: string;
+}
+
+/**
  * 推荐商品
  */
 export interface RecommendType {
@@ -17,6 +28,7 @@ export interface RecommendType {
 export interface PageType {
     pageNum: number;
     pageSize: number;
+    [x: string]: any;
 }
 
 /**
@@ -134,6 +146,7 @@ export interface DictItem {
  */
 export interface OrderDetail {
     goodsList?: OrderGoods[];
+    orderId: number;
     orderNo: string;
     addressId: number;
     orderStatus: number;

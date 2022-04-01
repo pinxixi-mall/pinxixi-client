@@ -6,11 +6,11 @@
                 round
                 width="60"
                 height="60"
-                src="https://cdn.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+                :src="userInfo?.avatar"
             />
             <div>
-                <p class="name">夜流云</p>
-                <p class="phone">19999999999</p>
+                <p class="name">{{userInfo?.userName}}</p>
+                <p class="phone" v-if="userInfo?.phone">{{userInfo?.phone}}</p>
             </div>
         </div>
         <ul class="list">
@@ -24,10 +24,10 @@
         </ul>
     </section>
     <van-cell-group inset class="my-order card">
-        <van-cell title="我的订单" value="全部订单" is-link @click="navToOrderList(1)" />
+        <van-cell title="我的订单" value="全部订单" is-link @click="navToOrderList(99)" />
         <van-grid :border="false">
-            <van-grid-item icon="pending-payment" text="待付款" />
-            <van-grid-item icon="send-gift-o" text="待收货" />
+            <van-grid-item icon="pending-payment" text="待付款" @click="navToOrderList(0)"/>
+            <van-grid-item icon="send-gift-o" text="待收货" @click="navToOrderList(1)" />
             <van-grid-item icon="comment-o" text="待评价" />
             <van-grid-item icon="after-sale" text="退款/售后" />
         </van-grid>
@@ -38,15 +38,20 @@
     <van-cell-group inset class="account card">
         <van-cell title="账号管理" to="/mine/account" is-link />
     </van-cell-group>
-    <van-button class="logout-btn" round block>退出登录</van-button>
+    <van-button class="logout-btn" round block @click="onLogout">退出登录</van-button>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, ref } from 'vue'
+import { getUserInfo, logout } from '@/api'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { UserInfo } from '@/types'
+import { setToken } from '@/utils'
+import { Dialog } from 'vant'
 
 export default defineComponent({
     name: "demo",
     setup() {
+        const userInfo = ref<UserInfo>()
         const list = ref([
             { label: '商品收藏', value: 16, icon: 'star-o' },
             { label: '红包卡券', value: 6, icon: 'cash-on-deliver' },
@@ -54,13 +59,36 @@ export default defineComponent({
         ])
         const router = useRouter()
 
+        onMounted(() => {
+            getUser()
+        })
+
+        // 获取用户信息
+        const getUser = async () => {
+            const { data } = await getUserInfo({ noLoading: true })
+            userInfo.value = data
+        }
+
+        // 退出登录
+        const onLogout = async () => {
+            await Dialog.confirm({
+                title: '确认退出登录？'
+            })
+            await logout()
+            setToken('')
+            router.push('/home')
+        }
+
+        // 去订单列表
         const navToOrderList = (status: number) => {
             router.push(`/order/list/${status}`)
         }
 
         return {
             list,
-            navToOrderList
+            userInfo,
+            navToOrderList,
+            onLogout
         }
     },
 })
@@ -79,11 +107,11 @@ export default defineComponent({
         }
         .name {
             font-size: 18px;
-            margin-bottom: 8px;
         }
         .phone {
             color: var(--van-gray-3);
             font-size: 14px;
+            margin-top: 8px;
         }
     }
     .list {

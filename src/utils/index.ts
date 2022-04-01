@@ -2,12 +2,14 @@ import Cookies from 'js-cookie'
 import { TOKEN_KEY } from '@/config/constants'
 import { DictItem } from '@/types'
 
+type Value = string | null
+
 /**
  * 设置cookie
  * @param key 
  * @param value 
  */
-export const setCookie = (key: string, value: string): void => {
+export const setCookie = (key: string, value: Value): void => {
   Cookies.set(key, value)
 }
 
@@ -16,7 +18,7 @@ export const setCookie = (key: string, value: string): void => {
  * @param key 
  * @returns 
  */
-export const getCookie = (key: string): string => {
+export const getCookie = (key: string): Value => {
   return Cookies.get(key)
 }
 
@@ -24,14 +26,14 @@ export const getCookie = (key: string): string => {
  * 设置token
  * @param value 
  */
-export const setToken = (value: string): void => {
+export const setToken = (value: Value): void => {
   setCookie(TOKEN_KEY, value)
 }
 
 /**
  * 读取token
  */
-export const getToken = (): string => {
+export const getToken = (): Value => {
   return getCookie(TOKEN_KEY)
 }
 
@@ -51,4 +53,4 @@ export const getDictName = (list: DictItem[], value: number | string | undefined
  * @param value 
  * @returns 
  */
-export const isEmpty = (value: any):boolean => value === '' || value === null || value === undefined 
+export const isEmpty = (value: any):boolean => value === '' || value === null || value === undefined || value === 'null'

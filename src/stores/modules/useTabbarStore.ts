@@ -6,7 +6,8 @@ import { defineStore } from 'pinia'
 export default defineStore({
   id: 'tabbar',
   state: () => ({
-    show: true
+    show: true,
+    activePath: ''
   }),
   actions: {
     /**
@@ -15,6 +16,14 @@ export default defineStore({
      */
     setTabbarShow(isShwow: boolean) {
       this.show = isShwow
+    },
+
+    /**
+     * 激活当前tabbar
+     * @param path
+     */
+    setTabbarActive(path: string) {
+      this.activePath = path
     }
   }
 })

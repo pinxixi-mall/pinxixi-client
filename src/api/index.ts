@@ -10,7 +10,8 @@ import {
   Address,
   QueryId,
   PageType,
-  UserInfo
+  UserInfo,
+  PasswordReset
 } from '@/types'
 import { OptionsType } from '@/request/types'
 
@@ -37,9 +38,16 @@ export const getUserInfo = (options?: OptionsType) =>
   })
 
 // 修改用户信息
-export const updateUserInfo = (data: UserInfo) =>
+export const updateUserInfo = (data: Partial<UserInfo>) =>
   http.put({
     url: `/client/user`,
+    data: data,
+  })
+
+// 修改密码
+export const resetPassword = (data: PasswordReset) =>
+  http.put({
+    url: `/client/user/reset`,
     data: data,
   })
 
@@ -57,10 +65,11 @@ export const getHomeCarousel = (data?: any) =>
   })
 
 // 首页推荐
-export const getRecommendList = (data: any) =>
+export const getRecommendList = (data: any, options?: OptionsType) =>
   http.get({
     url: `/client/home/recommend`,
-    params: data
+    params: data,
+    options
   })
 
 // 商品分类
@@ -184,4 +193,12 @@ export const updateAddress = (data: Partial<Address>) =>
 export const deleteAddress = (id: number) =>
   http.delete({
     url: `/client/address/${id}`,
+  })
+
+// 上传
+export const uploadFile = (data: FormData) =>
+  http.post({
+    url: `/client/upload/file`,
+    data,
+    headers: { "Content-Type": `application/x-www-form-urlencoded` },
   })

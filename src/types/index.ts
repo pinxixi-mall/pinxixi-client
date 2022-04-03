@@ -12,6 +12,15 @@ export interface UserInfo {
 }
 
 /**
+ * 密码重置
+ */
+ export interface PasswordReset {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+/**
  * 推荐商品
  */
 export interface RecommendType {

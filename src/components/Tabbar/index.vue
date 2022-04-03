@@ -1,5 +1,5 @@
 <template>
-  <van-tabbar v-model="active" class="common-nav">
+  <van-tabbar v-model="tabbarStore.activePath" class="common-nav">
     <van-tabbar-item icon="home-o" name="/home" url="/#/home">首页</van-tabbar-item>
     <van-tabbar-item icon="apps-o" name="/category" url="/#/category">分类</van-tabbar-item>
     <van-tabbar-item
@@ -27,13 +27,13 @@ export default defineComponent({
     const tabbarStore = useTabbarStore()
 
     onMounted(() => {
-      active.value = router.currentRoute.value.fullPath
       getToken() && tabbarStore.show && carStore.updateCartCount()
     })
 
     return {
       active,
       carStore,
+      tabbarStore
     }
   }
 })

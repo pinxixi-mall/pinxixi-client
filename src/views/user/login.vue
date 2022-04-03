@@ -6,7 +6,7 @@
             </template>
         </van-nav-bar>
         <van-image class="logo" :src="logo" />
-        <van-form class="login-form" ref="formRef" label-width="50px" @submit="onSubmit">
+        <van-form class="login-form" ref="formRef" label-width="50px" validate-trigger="onSubmit" @submit="onSubmit">
             <van-field
                 v-model="userName"
                 name="userName"
@@ -65,10 +65,10 @@ export default defineComponent({
         const formRef = ref(null)
         const codeImgText = ref<any>(null)
         const state = reactive({
-            userName: null,
-            password: null,
-            avatar: null,
-            verifyCode: null
+            userName: '',
+            password: '',
+            avatar: '',
+            verifyCode: ''
         })
 
         onMounted(() => {
@@ -91,12 +91,12 @@ export default defineComponent({
         const checkVerifyCode = (val: string) => val.toLowerCase() === codeImgText.value.toLowerCase()
 
         return {
-            logo,
             ...toRefs(state),
-            onSubmit,
-            formRef,
-            onRegister,
+            logo,
             codeImgText,
+            formRef,
+            onSubmit,
+            onRegister,
             checkVerifyCode
         }
     }

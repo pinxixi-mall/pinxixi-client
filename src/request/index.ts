@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import type { RequestConfig, RequestInterceptors } from './types'
 import { getToken, setToken } from '@/utils'
-import { TIMEOUT, BASE_URL } from '@/config/constants'
+import { TIMEOUT, BASE_URL, TOKEN_HEADER } from '@/config/constants'
 import { Toast, Dialog } from 'vant'
 import router from '@/router'
 import { HttpStatusEnum } from '@/config/httpStatusEnum'
@@ -25,7 +25,7 @@ class Request {
                 this.shwoLoading(config)
                 const token = getToken()
                 if (token) {
-                    config.headers && (config.headers.Authorization = `Bearer ${token}`)
+                    config.headers && (config.headers[TOKEN_HEADER] = `Bearer ${token}`)
                 }
                 return config
             },

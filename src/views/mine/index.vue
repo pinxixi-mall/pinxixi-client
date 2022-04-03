@@ -1,6 +1,6 @@
 <template>
     <section class="user-card">
-        <div class="info">
+        <div class="info" @click="$router.push('/mine/account')">
             <van-image
                 class="avatar"
                 round

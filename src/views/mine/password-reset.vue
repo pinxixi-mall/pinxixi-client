@@ -1,26 +1,21 @@
 <template>
     <div class="page">
-        <van-nav-bar title="注册" left-arrow @click-left="onCancel">
-            <template #right>
-                <van-icon name="wap-home" size="18" @click="$router.push('/home')" />
-            </template>
-        </van-nav-bar>
-        <van-image class="logo" :src="logo" />
-        <van-form class="login-form" ref="formRef" validate-trigger="onSubmit" @submit="onSubmit" >
+        <van-nav-bar title="修改密码" left-arrow @click-left="onCancel" />
+        <van-form class="reset-form" ref="formRef" validate-trigger="onSubmit" @submit="onSubmit">
             <van-field
-                v-model="state.userName"
-                name="userName"
-                label="用户名"
-                placeholder="请填写用户名"
-                :rules="[{ required: true, message: '请填写用户名' }]"
+                v-model="state.oldPassword"
+                name="oldPassword"
+                label="原密码"
+                placeholder="原密码"
+                :rules="[{ required: true, message: '请填写原密码' }]"
             />
             <van-field
-                v-model="state.password"
+                v-model="state.newPassword"
                 type="password"
                 name="password"
-                label="密码"
-                placeholder="请填写密码"
-                :rules="[{ required: true, message: '请填写密码' }]"
+                label="新密码"
+                placeholder="请填写新密码"
+                :rules="[{ required: true, message: '请填写新密码' }]"
             />
             <van-field
                 v-model="state.confirmPassword"
@@ -32,50 +27,41 @@
             />
             <div class="submit-btn">
                 <van-button round block type="primary" native-type="submit">提交</van-button>
-                <van-button
-                    round
-                    block
-                    type="primary"
-                    plain
-                    class="register-btn"
-                    @click="onCancel"
-                >取消</van-button>
             </div>
         </van-form>
     </div>
 </template>
 
 <script lang="ts">
-import { ref, reactive, defineComponent } from 'vue'
-import { useRouter } from 'vue-router'
-import { register } from '@/api/index'
+import { resetPassword, updateUserInfo } from '@/api'
 import { Toast } from 'vant'
-import logo from '@/assets/icons/pxx-logo.png'
+import { defineComponent, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
     setup() {
         const router = useRouter()
         const formRef = ref(null)
         const state = reactive({
-            userName: '',
-            password: '',
+            oldPassword: '',
+            newPassword: '',
             confirmPassword: ''
         })
 
         const rules = {
-            confirmPassword: (val: string) => (val === state.password ? true : '两次输入的密码不一致')
+            confirmPassword: (val: string) => (val === state.newPassword ? true : '两次输入的密码不一致')
         }
 
-        // 注册
+        // 重置密码
         const onSubmit = async () => {
             const params = {
-                userName: state.userName,
-                password: state.password,
+                oldPassword: state.oldPassword,
+                newPassword: state.newPassword,
                 confirmPassword: state.confirmPassword
             }
-            const { msg } = await register(params)
-            Toast(msg)
-            onCancel()
+            const { msg } = await resetPassword(params)
+            Toast.success(msg)
+            router.replace('/login')
         }
 
         const onCancel = () => {
@@ -86,13 +72,11 @@ export default defineComponent({
             state,
             formRef,
             rules,
-            logo,
             onSubmit,
             onCancel,
         }
     }
 })
-
 </script>
 
 <style lang="less" scoped>
@@ -102,11 +86,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     background-color: #fff;
-    .logo {
-        height: 50px;
-        margin: 50px auto 20px;
-    }
-    .login-form {
+    .reset-form {
         margin-top: 50px;
         padding: 0 30px;
         .submit-btn {

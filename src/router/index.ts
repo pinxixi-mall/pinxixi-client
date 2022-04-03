@@ -131,6 +131,14 @@ const routes: Array<RouteRecordRaw> = [
       title: '账号管理'
     },
     component: () => import('@/views/mine/account.vue')
+  },
+  {
+    path: '/mine/reset-pwd',
+    name: '/mine/reset-pwd',
+    meta: {
+      title: '修改密码'
+    },
+    component: () => import('@/views/mine/password-reset.vue')
   }
 ]
 
@@ -141,11 +149,13 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   // 需要隐藏底部tabbar时在路径传入hide=1
-  const { hide } = to.query
+  const { path, query: { hide } } = to
   const tabbarStore = useTabbarStore()
   tabbarStore.setTabbarShow(!hide)
+  // 高亮tabbar
+  tabbarStore.setTabbarActive(path)
 
-  if (NO_TOKEN_PATH.includes(to.path) || !isEmpty(getToken())) {
+  if (NO_TOKEN_PATH.includes(path) || !isEmpty(getToken())) {
     next()
   } else {
     Toast('未登录')

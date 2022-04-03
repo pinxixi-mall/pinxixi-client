@@ -9,36 +9,36 @@
     />
     <section class="avatar">
         <van-uploader :max-count="1" :after-read="afterRead">
-            <van-image class="avatar-img" width="80" height="80" :src="avatar" v-if="avatar" />
+            <van-image class="avatar-img" width="90" height="90" :src="userInfo.avatar" v-if="userInfo.avatar" />
             <van-icon v-else class="default-icon" name="contact" />
         </van-uploader>
     </section>
     <van-form @submit="onSubmit">
         <van-cell-group inset>
             <van-field
-                v-model="userName"
+                v-model="userInfo.userName"
                 name="userName"
                 label="用户名"
                 placeholder="用户名"
                 input-align="right"
-                :rules="[{ required: true, message: '用户名不能为空' }]"
+                readonly
             />
             <van-field
-                v-model="nickName"
+                v-model="userInfo.nickName"
                 name="nickName"
                 label="昵称"
                 placeholder="昵称"
                 input-align="right"
             />
             <van-field
-                v-model="phone"
+                v-model="userInfo.phone"
                 name="phone"
                 label="手机号"
                 placeholder="手机号"
                 input-align="right"
             />
             <van-field
-                v-model="email"
+                v-model="userInfo.email"
                 name="email"
                 label="邮箱"
                 placeholder="邮箱"
@@ -47,43 +47,52 @@
         </van-cell-group>
         <div style="margin: 30px 16px">
             <van-button round block native-type="submit">保存</van-button>
-            <van-button round block style="margin-top: 10px;">修改密码</van-button>
+            <van-button round block style="margin-top: 10px;" to="/mine/reset-pwd">修改密码</van-button>
         </div>
     </van-form>
 </template>
 
 <script lang="ts">
 import { UserInfo } from '@/types'
-import { defineComponent, reactive, toRefs } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import { ref } from 'vue'
-import { updateUserInfo } from '@/api'
+import { getUserInfo, updateUserInfo, uploadFile } from '@/api'
 
 export default defineComponent({
     setup() {
-        const userInfo = reactive<Partial<UserInfo>>({
-            avatar: '',
-            userName: '',
-            nickName: '',
-            phone: '',
-            email: ''
+        const state = reactive<{
+            userInfo: Partial<UserInfo>
+        }>({
+            userInfo: {}
         })
-        const afterRead = (file: any) => {
-            // 此时可以自行将文件上传至服务器
-            userInfo.avatar = file.content
 
-            console.log(file);
-        };
+        onMounted(() => {
+            getUser()
+        })
+
+        const getUser = async () => {
+            const { data } = await getUserInfo()
+            state.userInfo = data
+        }
+
+        const afterRead = async (value: any) => {
+            const file = new FormData()
+            file.append('file', value.file)
+            const { data: {url} } = await uploadFile(file)
+            state.userInfo.avatar = url
+            await updateUserInfo(state.userInfo)
+        }
 
         const onSubmit = async (values: any) => {
             console.log('submit', values);
             await updateUserInfo(values)
-        };
+        }
 
         return {
-            ...toRefs(userInfo),
+            ...toRefs(state),
             afterRead,
             onSubmit,
-        };
+        }
     },
 
 })
@@ -98,10 +107,10 @@ export default defineComponent({
     background-color: var(--van-blue);
     margin-bottom: 16px;
     .default-icon{
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
+        line-height: 90px;
         text-align: center;
-        line-height: 80px;
         font-size: 42px;
         color: var(--van-gray-6);
         border-radius: 80px;

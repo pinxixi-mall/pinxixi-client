@@ -29,7 +29,7 @@
                         @click="onOrderClick(item)"
                     >
                         <div class="header">
-                            <span class="label">拼夕夕官方旗舰店</span>
+                            <span class="label">拼西西官方旗舰店</span>
                             <span
                                 class="status"
                             >{{ getDictName(orderStatusList, item.orderStatus) }}</span>

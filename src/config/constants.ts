@@ -2,7 +2,7 @@ export const TOKEN_KEY = 'ACCESS_TOKEN_CLIENT'
 
 export const TOKEN_HEADER = 'Authorization'
 
-export const BASE_URL = process.env.NODE_ENV === 'development' ? 'api' : ''
+export const BASE_URL = process.env.NODE_ENV === 'development' ? 'api' : 'api'
 
 /**
  * 请求超时时间

@@ -2,7 +2,7 @@
     <div class="page">
         <van-nav-bar title="登录" left-arrow @click-left="$router.go(-1)">
             <template #right>
-                <van-icon name="wap-home" size="18" @click="$router.push('/home')" />
+                <van-icon name="home-o" size="20" @click="$router.push('/home')" />
             </template>
         </van-nav-bar>
         <van-image class="logo" :src="logo" />

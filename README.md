@@ -1,14 +1,86 @@
-# Vue 3 + Typescript + Vite
+# pinxixi-client
+## 系统简介
+拼西西商城H5客户端，主要基于Vue3.x及ts相关技术栈开发。商城已实现功能模块有：首页活动轮播及推荐商品展示、商品详情、商品分类、购物车、订单提交、订单支付、地址管理、账号管理等。
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+### 主要技术栈
++ Vue3.x
++ Vite2.x
++ Vant4.x
++ Typescript
++ Pinia
 
-## Recommended IDE Setup
+<br/>
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+## 在线体验
+### [H5客户端](http://119.29.134.117:3000/)（pxx/123456）
+### [后台管理系统](http://119.29.134.117:3001/)（admin/123456）
 
-## Type Support For `.vue` Imports in TS
+<br/>
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+## 开发
+### 安装依赖
+
+```bash
+# with npm
+npm install
+# or with yarn
+yarn
+```
+### 启动
+```bash
+# with npm
+npm run dev
+# or with yarn
+yarn dev
+```
+### 本地打包
+```bash
+# with npm
+npm run build
+# or with yarn
+yarn build
+```
+
+## 功能模块
+
+- 用户模块
+  - 用户登录/登出
+  - 用户注册
+  - 修改用户信息
+- 首页模块
+  - 轮播图
+  - 推荐商品
+- 商品模块
+    - 商品详情
+- 商品分类模块
+- 购物车模块
+    - 添加
+    - 修改
+    - 删除
+- 个人中心模块
+    - 我的订单
+    - 地址管理
+    - 账号管理
+
+<br />
+
+## 项目演示(部分)
+<div>
+  <img src="demo/login.png" style="margin:4px" width="200">
+  <img src="demo/home.png" style="margin:4px" width="200">
+  <img src="demo/category.png" style="margin:4px" width="200">
+</div>
+<div>
+  <img src="demo/detail.png" style="margin:4px" width="200">
+  <img src="demo/cart.png" style="margin:4px" width="200">
+  <img src="demo/confirm.png" style="margin:4px" width="200">
+</div>
+<div>
+  <img src="demo/pay.png" style="margin:4px" width="200">
+  <img src="demo/mine.png" style="margin:4px" width="200">
+</div>
+
+<br />
 
 ## 问题记录
 

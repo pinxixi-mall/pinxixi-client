@@ -25,8 +25,8 @@ export default defineConfig({
     cors: true, // 允许跨域
     proxy: {
       '/api': {
-        // target: 'http://localhost:9090/',
-        target: 'http://119.29.134.117:9090/',
+        target: 'http://localhost:9090/',
+        // target: 'http://119.29.134.117:9090/',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace('/api', '')

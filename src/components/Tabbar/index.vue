@@ -9,20 +9,18 @@
       :badge="carStore.cartCount"
       :badge-props="{ showZero: false }"
     >购物车</van-tabbar-item>
-    <van-tabbar-item icon="manager-o" name="/mine" url="/#/mine">我的</van-tabbar-item>
+    <van-tabbar-item icon="manager-o" name="/mine" url="/#/mine" :dot="!token">{{token ? '我的' : '未登录'}}</van-tabbar-item>
   </van-tabbar>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useCartStore, useTabbarStore } from '@/stores'
 import { getToken } from '@/utils'
 
 export default defineComponent({
   setup() {
     const active = ref()
-    const router = useRouter()
     const carStore = useCartStore()
     const tabbarStore = useTabbarStore()
 
@@ -33,7 +31,8 @@ export default defineComponent({
     return {
       active,
       carStore,
-      tabbarStore
+      tabbarStore,
+      token: getToken()
     }
   }
 })

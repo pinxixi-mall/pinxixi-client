@@ -128,6 +128,7 @@ export default defineComponent({
         padding: 16px 0;
     }
     :deep(.van-cell__title) {
+        flex: none;
         color: var(--van-cell-value-color);
     }
 }

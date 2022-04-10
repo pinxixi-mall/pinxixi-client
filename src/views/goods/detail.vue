@@ -12,7 +12,7 @@
     </section>
     <pxx-card class="info-card">
       <div class="goods-info-price">
-        <div class="price num">{{ detail.goodsPrice }}</div>
+        <price :value="detail.goodsPrice" :font-size="14" />
         <div class="share">
           <van-icon name="share-o" size="20" />
           <div class="text">分享</div>
@@ -62,6 +62,7 @@ import PxxCard from '@/components/Card/index.vue'
 import { addCart } from '@/api'
 import { Toast } from 'vant'
 import { useCartStore } from '@/stores'
+import Price from '@/components/Price'
 
 onMounted(() => {
   const route = useRoute()
@@ -138,10 +139,6 @@ const { detail } = toRefs(state)
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
-      .num {
-        color: var(--van-primary-color);
-        font-size: 28px;
-      }
       .share {
         height: 34px;
         display: flex;

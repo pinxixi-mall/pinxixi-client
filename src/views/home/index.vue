@@ -1,61 +1,59 @@
 <template>
     <div class="scroll-box" ref="scrollBox">
+        <div class="top-bg"></div>
         <div ref="scrollContent">
-            <!-- <van-pull-refresh v-model="isRefreshLoading" @refresh="onRefresh"> -->
-                <van-sticky>
-                    <van-search
-                        v-model="searchValue"
-                        shape="round"
-                        background="#e43130"
-                        show-action
-                        placeholder="请输入搜索关键词(TODO)"
-                        @search="onSearch"
+            <van-sticky>
+                <van-search
+                    v-model="searchValue"
+                    shape="round"
+                    background="#e43130"
+                    show-action
+                    placeholder="请输入搜索关键词(TODO)"
+                    @search="onSearch"
+                >
+                    <template #action>
+                        <div @click="onSearch" style="color: #fff">搜索</div>
+                    </template>
+                </van-search>
+            </van-sticky>
+            <!-- 轮播图 -->
+            <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#fa2c19" lazy-render>
+                <van-swipe-item v-for="carousel in carouselList" :key="carousel.carouselId">
+                    <img class="carousel-img" :src="carousel.carouselImage" />
+                </van-swipe-item>
+            </van-swipe>
+            <!-- 快捷菜单 -->
+            <div class="quick-nav-box">
+                <van-grid icon-size="40" :border="false" square clickable column-num="5">
+                    <van-grid-item
+                        v-for="item in quickNavList"
+                        :key="item.id"
+                        :icon="item.icon"
+                        :text="item.name"
+                    />
+                </van-grid>
+            </div>
+            <!-- 推荐商品 -->
+            <div class="recommend-box">
+                <Waterfall :list="recommendList">
+                    <WaterfallItem
+                        v-for="item in recommendList"
+                        :key="item.recommendId"
+                        @click="handleGoodsClick(item)"
                     >
-                        <template #action>
-                            <div @click="onSearch" style="color: #fff">搜索</div>
-                        </template>
-                    </van-search>
-                </van-sticky>
-                <!-- 轮播图 -->
-                <van-swipe class="my-swipe" :autoplay="3000" indicator-color="#fa2c19" lazy-render>
-                    <van-swipe-item v-for="carousel in carouselList" :key="carousel.carouselId">
-                        <img class="carousel-img" :src="carousel.carouselImage" />
-                    </van-swipe-item>
-                </van-swipe>
-                <!-- 快捷菜单 -->
-                <div class="quick-nav-box">
-                    <van-grid icon-size="40" :border="false" square clickable column-num="5">
-                        <van-grid-item
-                            v-for="item in quickNavList"
-                            :key="item.id"
-                            :icon="item.icon"
-                            :text="item.name"
-                        />
-                    </van-grid>
-                </div>
-                <!-- 推荐商品 -->
-                <div class="recommend-box" >
-                    <Waterfall :list="recommendList">
-                        <WaterfallItem
-                            v-for="item in recommendList"
-                            :key="item.recommendId"
-                            @click="handleGoodsClick(item)"
-                        >
-                            <div class="recommend-item">
-                                <van-image class="recommend-item-img" :src="item.goodsImage" />
-                                <p
-                                    class="recommend-item-text van-multi-ellipsis--l2"
-                                >{{ item.recommendDesc }}</p>
-                                <p class="recommend-item-price">
-                                    <span class="money-sign">￥</span>
-                                    <span>{{ item.goodsPrice }}</span>
-                                </p>
-                            </div>
-                        </WaterfallItem>
-                    </Waterfall>
-                    <BottomLoading :isLoading="isRecommendLoading" :isLastPage="isLastRecommendPage" />
-                </div>
-            <!-- </van-pull-refresh> -->
+                        <div class="recommend-item">
+                            <van-image class="recommend-item-img" :src="item.goodsImage" />
+                            <p
+                                class="recommend-item-text van-multi-ellipsis--l2"
+                            >{{ item.recommendDesc }}</p>
+                            <p class="recommend-item-price">
+                                <price :value="item.goodsPrice" :font-size="10" />
+                            </p>
+                        </div>
+                    </WaterfallItem>
+                </Waterfall>
+                <BottomLoading :isLoading="isRecommendLoading" :isLastPage="isLastRecommendPage" />
+            </div>
         </div>
     </div>
 </template>
@@ -70,6 +68,7 @@ import BottomLoading from '@/components/BottomLoading/BottomLoading.vue'
 import { useRouter } from 'vue-router'
 import Waterfall from '@/components/Waterfall/index.vue'
 import WaterfallItem from '@/components/WaterfallItem/index.vue'
+import Price from '@/components/Price'
 
 interface HomeStateType {
     carouselList: any[];
@@ -78,7 +77,7 @@ interface HomeStateType {
 }
 
 export default defineComponent({
-    components: { BottomLoading, Waterfall, WaterfallItem },
+    components: { BottomLoading, Waterfall, WaterfallItem, Price },
     setup() {
         const router = useRouter()
         const isLastRecommendPage = ref()
@@ -182,9 +181,22 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .scroll-box {
+    position: relative;
     width: 100vw;
     height: 100%;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    .top-bg {
+        position: absolute;
+        top: 0;
+        left: -25%;
+        width: 150%;
+        height: 160px;
+        border-bottom-left-radius: 100%;
+        border-bottom-right-radius: 100%;
+        background-color: var(--pxx-primary-color);
+        z-index: -1;
+    }
 }
 .my-swipe .van-swipe-item {
     color: #fff;
@@ -201,7 +213,6 @@ export default defineComponent({
 .quick-nav-box {
     background: #fff;
     padding: 10px 0;
-    border-radius: 40px 40px 0 0;
 }
 
 .recommend-box {
@@ -215,7 +226,7 @@ export default defineComponent({
         overflow: hidden;
         border: 1px solid var(--van-pray-6);
         padding-bottom: 10px;
-        .recommend-item-img{
+        .recommend-item-img {
             height: 172px;
         }
         .recommend-item-text {
@@ -226,14 +237,8 @@ export default defineComponent({
         }
         .recommend-item-price {
             padding: 0 4px;
-            font-size: 16px;
-            color: var(--van-primary-color);
             font-weight: bold;
-            .money-sign {
-                font-size: 12px;
-            }
         }
     }
 }
-
 </style>

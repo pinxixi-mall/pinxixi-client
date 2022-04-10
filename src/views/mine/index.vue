@@ -9,7 +9,7 @@
                 :src="userInfo?.avatar"
             />
             <div>
-                <p class="name">{{userInfo?.userName}}</p>
+                <p class="name">{{userInfo?.nickName || userInfo?.userName}}</p>
                 <p class="phone" v-if="userInfo?.phone">{{userInfo?.phone}}</p>
             </div>
         </div>

@@ -103,7 +103,7 @@ export default defineComponent({
     flex-direction: column;
     background-color: #fff;
     .logo {
-        height: 50px;
+        width: 200px;
         margin: 50px auto 20px;
     }
     .login-form {

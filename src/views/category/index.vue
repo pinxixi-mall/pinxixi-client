@@ -91,6 +91,7 @@ export default defineComponent({
   top: 50px;
   .level-1 {
     position: absolute;
+    width: 100px;
     top: 0;
     bottom: 0;
     overflow-y: auto;

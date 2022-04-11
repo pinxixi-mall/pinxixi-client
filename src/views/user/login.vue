@@ -112,7 +112,7 @@ export default defineComponent({
     flex-direction: column;
     background-color: #fff;
     .logo {
-        height: 60px;
+        width: 200px;
         margin: 50px auto;
     }
     .avatar {

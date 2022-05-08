@@ -1,0 +1,21 @@
+|-- src
+    |-- api                 // 接口文件
+    |-- assets              // 资源文件
+    |-- components          // 组件
+    |-- config              // 项目配置
+    |-- layout              // 页面布局
+    |-- request             // 网络请求
+    |-- router              // 路由
+    |-- stores              // store仓库
+    |-- styles              // 全局样式
+    |-- types               // ts接口
+    |-- use                 // 自定义hook
+    |-- utils               // 工具方法
+    |-- views               // 页面
+        |-- cart            // 购物车
+        |-- category        // 分类
+        |-- goods           // 商品模块
+        |-- home            // 首页模块
+        |-- mine            // 我的
+        |-- order           // 订单模块
+        |-- user            // 用户模块
